@@ -1,0 +1,23 @@
+Build using:
+
+make superopt-xcore
+
+To start searching optimal sequence for a particular goal function (in this example
+abs) use:
+
+superopt-xcore -fabs -assembly -max-cost 3
+
+This should produce the following output:
+
+Searching for { r = (signed_word) v0 < 0 ? -v0 : v0; }
+Superoptimizing at cost 1 2 3
+1: ashr   r1,r0,32
+   add   r2,r1,r0
+   xor   r3,r2,r1
+2: ashr   r1,r0,32
+   xor   r2,r1,r0
+   sub   r3,r2,r1
+[2 sequences found]
+
+To add new goal functions you will need to edit goal.def and recompile, the syntax
+should be clear from the existing examples.
