@@ -429,6 +429,8 @@ static char *operand_names[256]=
   "g0", "g1", "g2", "g3", "g4", "g5", "g6", "g7",
 #elif XCORE
   "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
+#elif AVR
+  "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
 #else
 #error no register names for this CPU
 #endif
@@ -474,6 +476,10 @@ static char *operand_names[256]=
   "20","21","22","23","24","25","26","27","28","29","30","31",
 #elif XCORE
   "0x7fffffff","0x80000000","-1","0","1","2","3","4","5","6",
+  "7","8","9","10","11","12","13","14","15","16","17","18","19",
+  "20","21","22","23","24","25","26","27","28","29","30","31",
+#elif AVR
+  "0x7f","0x80","-1","0","1","2","3","4","5","6",
   "7","8","9","10","11","12","13","14","15","16","17","18","19",
   "20","21","22","23","24","25","26","27","28","29","30","31",
 #else
@@ -2466,6 +2472,26 @@ output_assembly(insn_t insn)
       else
         printf("mov     %s,%s",NAME(d),NAME(s1));
       break;
+#elif AVR
+    case ADD:
+      if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
+        printf("inc       %s",NAME(s1));
+      else abort();
+      break;
+    case ADD_CO:
+      printf("add       %s,%s",NAME(s1),NAME(s2)); break;
+    case SUB_CO:
+      printf("sub       %s,%s",NAME(s1),NAME(s2));break;
+    case AND:
+      printf("and       %s,%s",NAME(s1),NAME(s2));break;
+    case CMP:
+      printf("cp        %s,%s",NAME(s1),NAME(s2));break;
+    case IOR:
+      printf("or        %s,%s",NAME(s1),NAME(s2));break;
+    case XOR:
+      printf("xor       %s,%s",NAME(s1),NAME(s2));break;
+    case COPY:
+      printf("mov       %s,%s",NAME(d),NAME(s1));break;
 #else
 #error no assembly output code for this CPU
 #endif

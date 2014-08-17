@@ -2648,7 +2648,7 @@ synth_skip (insn_t *sequence,
 #endif /* !MAKE_LEAF */
 #endif /* HPPA */
 
-#if M68000 || I386 || PYR || SH
+#if M68000 || I386 || PYR || SH || AVR
 void
 MAKENAME (synth) (insn_t *sequence,
                   int n_insns,
@@ -2752,7 +2752,7 @@ MAKENAME (synth) (insn_t *sequence,
           PERFORM_ADD(v, co, r1, r2, ci);
           CRECURSE_2OP(ADD, s1, s1, s2, 1, prune_hint & ~CY_JUST_SET);
 #endif
-#if M68000 || I386 || PYR
+#if M68000 || I386 || PYR || AVR
           /* m68000:    add
              i80386:    add
              pyramid:   addw */
@@ -2766,7 +2766,7 @@ MAKENAME (synth) (insn_t *sequence,
           PERFORM_SUB(v, co, r1, r2, ci);
           CRECURSE_2OP(SUB, s1, s1, s2, 1, prune_hint & ~CY_JUST_SET);
 #endif
-#if M68000 || I386
+#if M68000 || I386 || AVR
               /* m68000:        sub
                  i80386:        sub */
               PERFORM_SUB_CO(v, co, r1, r2, ci);
@@ -2777,7 +2777,7 @@ MAKENAME (synth) (insn_t *sequence,
               PERFORM_ADC_CO(v, co, r1, r2, ci);
               CRECURSE_2OP(ADC_CO, s1, s1, s2, 1, CY_JUST_SET);
 #endif
-#if M68000 || SH
+#if M68000 || SH || AVR
               PERFORM_AND(v, co, r1, r2, ci);
               CRECURSE_2OP(AND, s1, s1, s2, 1, prune_hint & ~CY_JUST_SET);
 
@@ -2810,7 +2810,7 @@ MAKENAME (synth) (insn_t *sequence,
               PERFORM_XOR_CC(v, co, r1, r2, ci);
               CRECURSE_2OP(XOR_CC, s1, s1, s2, 1, 0);
 #endif
-#if I386
+#if I386 || AVR
               PERFORM_CMP(v, co, r1, r2, ci);
               /* kludge: lie that the result is written to
                  register <n_values>. */
@@ -2977,7 +2977,7 @@ MAKENAME (synth) (insn_t *sequence,
         {
           /* Certain instructions should not terminate a sequence.  So we
              only generate them in non-leaf nodes.  */
-#if M68000 || I386 || PYR || SH
+#if M68000 || I386 || PYR || SH || AVR
           /* d = r1
              m68000:    move    s1,d
              i80386:    move    s1,d
@@ -3192,7 +3192,7 @@ MAKENAME (synth) (insn_t *sequence,
          pyramid:       mcomw   s1,d */
       /* We need a new insn: SUB_CC, for Subtract and Clobber Carry.  */
 #endif
-#if I386 || SH
+#if I386 || SH || AVR
       /* d = r1 + 1
          i80386:        inc     d
          sh:            add     #1,d */

@@ -21,7 +21,8 @@ ALL_MACHINES =	superopt-sparc \
 		superopt-alpha \
 		superopt-sh \
 		superopt-hppa \
-		superopt-xcore
+		superopt-xcore \
+		superopt-avr
 
 OBJS	= superopt.o
 SRCS	= superopt.c
@@ -141,6 +142,12 @@ superopt-xcore: $(SRCS) $(HDRS)
 xcore.res: superopt-xcore
 	./superopt-xcore -all $(EXTRA) -max $(MAXCOST) -as >xcore.tmp 2>&1
 	mv xcore.tmp xcore.res
+
+superopt-avr: $(SRCS) $(HDRS)
+	$(CC) $(CFLAGS) -DAVR -o superopt-avr $(SRCS)
+avr.res: superopt-avr
+	./superopt-avr -all $(EXTRA) -max $(MAXCOST) -as >avr.tmp 2>&1
+	mv avr.tmp avr.res
 
 dist:
 	mkdir superopt-$(VERSION)

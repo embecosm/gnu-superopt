@@ -19,7 +19,8 @@
 #if !(defined(SPARC) || defined(POWER) || defined(POWERPC) || defined(M88000) \
       || defined(AM29K) || defined(MC68000) || defined(MC68020) \
       || defined(I386) || defined(PYR) || defined(ALPHA) || defined(HPPA) \
-      || defined(SH) || defined (I960) || defined (I960B)|| defined(XCORE)) 
+      || defined(SH) || defined (I960) || defined (I960B)|| defined(XCORE) \
+      || defined(AVR))
 /* If no target instruction set is defined, use host instruction set.  */
 #define SPARC (defined(sparc) || defined(__sparc__))
 #define POWER ((defined(rs6000) || defined(_IBMR2)) && !defined (_ARCH_PPC))
@@ -96,10 +97,12 @@
 #define TARGET_STRING "Intel 960 v1.1"
 #elif  XCORE
 #define TARGET_STRING "XMOS XCore"
+#elif AVR
+#define TARGET_STRING "AVR"
 #endif
 
 #if !(SPARC || POWER || M88000 || AM29K || M68000 || I386 || PYR \
-      || ALPHA || HPPA || SH || I960 || XCORE)
+      || ALPHA || HPPA || SH || I960 || XCORE || AVR)
 #error You have to choose target CPU type (e.g. -DSPARC).
 #endif
 
@@ -111,6 +114,8 @@
 
 #if ALPHA
 #define BITS_PER_WORD 64
+#elif AVR
+#define BITS_PER_WORD 8
 #else
 #define BITS_PER_WORD 32
 #endif
@@ -147,6 +152,10 @@ typedef unsigned_word word;
 #else /* Not on alpha, not GCC.  Don't have 64 bit type.  */
 #error Do not know how to perform 64 bit arithmetic with this compiler.
 #endif
+#elif AVR
+typedef unsigned char unsigned_word;
+typedef signed char signed_word;
+typedef unsigned_word word;
 #else
 typedef unsigned int unsigned_word;
 typedef signed int signed_word;

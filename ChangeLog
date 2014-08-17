@@ -1,3 +1,12 @@
+2014-08-17  James Pallister  <james.pallister@embecosm.com>
+
+	* All files: Add AVR support. Support for the add, sub, inc, cmp, xor,
+		or, and, mov instruction.
+
+2014-08-17  James Pallister  <james.pallister@embecosm.com>
+
+	* All files: Fix white space. All tabs converted to whitespace
+
 2010-18-07  Richard Osborne  <richard@xmos.com>
 
 	* superopt.h: Fix incorrect use of unsigned_word type in PERFORM_SEXT macro
