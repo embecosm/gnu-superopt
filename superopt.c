@@ -76,14 +76,14 @@ unsigned int heuristic_accept_count = 0;
 
 char *insn_name[] =
 {
-#undef	DEF_INSN
+#undef  DEF_INSN
 #define DEF_INSN(SYM,CLASS,NAME) NAME,
 #include "insn.def"
 };
 
 char insn_class[] =
 {
-#undef	DEF_INSN
+#undef  DEF_INSN
 #define DEF_INSN(SYM,CLASS,NAME) CLASS,
 #include "insn.def"
 };
@@ -136,15 +136,15 @@ init_random_word (void)
 }
 
 #define RANDOM(res,rbits) \
-  do {								\
-    if (valid_randbits < rbits)					\
-      {								\
-	ran = random ();					\
-	valid_randbits = 31;					\
-      }								\
-    res = ran & (((word) 1 << rbits) - 1);			\
-    ran >>= rbits;						\
-    valid_randbits -= rbits;					\
+  do {                                                          \
+    if (valid_randbits < rbits)                                 \
+      {                                                         \
+        ran = random ();                                        \
+        valid_randbits = 31;                                    \
+      }                                                         \
+    res = ran & (((word) 1 << rbits) - 1);                      \
+    ran >>= rbits;                                              \
+    valid_randbits -= rbits;                                    \
   } while (0)
 
 word
@@ -175,7 +175,7 @@ random_word (void)
       x <<= n_bits;
       RANDOM (tmp, 1);
       if (tmp)
-	x |= ((word) 1 << n_bits) - 1;
+        x |= ((word) 1 << n_bits) - 1;
     }
 
   return x;
@@ -207,25 +207,25 @@ xmalloc (size)
 
 #if HAS_NULLIFICATION
 #define SYNTH(sequence, n_insns, values, n_values, goal_value, \
-	      allowed_cost, cy, prune_flags, nullify_flag)		\
-  do {									\
-    if (allowed_cost == 1)						\
-      synth_last(sequence, n_insns, values, n_values, goal_value,	\
-		 allowed_cost, cy, prune_flags, nullify_flag);		\
-    else								\
-      synth(sequence, n_insns, values, n_values, goal_value,		\
-	    allowed_cost, cy, prune_flags, nullify_flag);		\
+              allowed_cost, cy, prune_flags, nullify_flag)              \
+  do {                                                                  \
+    if (allowed_cost == 1)                                              \
+      synth_last(sequence, n_insns, values, n_values, goal_value,       \
+                 allowed_cost, cy, prune_flags, nullify_flag);          \
+    else                                                                \
+      synth(sequence, n_insns, values, n_values, goal_value,            \
+            allowed_cost, cy, prune_flags, nullify_flag);               \
   } while (0)
 #else
 #define SYNTH(sequence, n_insns, values, n_values, goal_value, \
-	      allowed_cost, cy, prune_flags, nullify_flag)		\
-  do {									\
-    if (allowed_cost == 1)						\
-      synth_last(sequence, n_insns, values, n_values, goal_value,	\
-		 allowed_cost, cy, prune_flags);			\
-    else								\
-      synth(sequence, n_insns, values, n_values, goal_value,		\
-	    allowed_cost, cy, prune_flags);				\
+              allowed_cost, cy, prune_flags, nullify_flag)              \
+  do {                                                                  \
+    if (allowed_cost == 1)                                              \
+      synth_last(sequence, n_insns, values, n_values, goal_value,       \
+                 allowed_cost, cy, prune_flags);                        \
+    else                                                                \
+      synth(sequence, n_insns, values, n_values, goal_value,            \
+            allowed_cost, cy, prune_flags);                             \
   } while (0)
 #endif
 
@@ -268,23 +268,23 @@ xmalloc (size)
 
 static void
 recurse(opcode_t opcode,
-	int d,
-	int s1,
-	int s2,
-	word v,
-	int cost,
-	insn_t *sequence,
-	int n_insns,
-	word *values,
-	int n_values,
-	const word goal_value,
-	int allowed_cost,
-	int cy,
-	int prune_flags
+        int d,
+        int s1,
+        int s2,
+        word v,
+        int cost,
+        insn_t *sequence,
+        int n_insns,
+        word *values,
+        int n_values,
+        const word goal_value,
+        int allowed_cost,
+        int cy,
+        int prune_flags
 #if HAS_NULLIFICATION
-	,int nullify_flag
+        ,int nullify_flag
 #endif
-	)
+        )
 {
   insn_t insn;
 
@@ -295,24 +295,24 @@ recurse(opcode_t opcode,
   if (allowed_cost > 0)
     {
       /* ALLOWED_COST is still positive, meaning we can generate more
-	 instructions.  */
+         instructions.  */
       word old_d;
 
 #if HAS_NULLIFICATION
       /* If we we have one more instruction, and it will be nullified for the
-	 used arguments, ensure already now that we have the goal value
-	 somewhere.  Kludge for speed.  */
+         used arguments, ensure already now that we have the goal value
+         somewhere.  Kludge for speed.  */
       if (allowed_cost == 1 && nullify_flag)
-	{
-	  int i;
-	  if (v == goal_value)
-	    goto found_goal_value;
-	  for (i = 0; i < n_values; i++)
-	    if (values[i] == goal_value)
-	      goto found_goal_value;
-	  return;
-	found_goal_value:;
-	}
+        {
+          int i;
+          if (v == goal_value)
+            goto found_goal_value;
+          for (i = 0; i < n_values; i++)
+            if (values[i] == goal_value)
+              goto found_goal_value;
+          return;
+        found_goal_value:;
+        }
 #endif
 
       /* Remember old value of dest. reg.  Move to CRECURSE_2OP???  */
@@ -330,7 +330,7 @@ recurse(opcode_t opcode,
 #endif
 
       SYNTH(sequence, n_insns + 1, values, n_values, goal_value,
-	     allowed_cost, cy, prune_flags, nullify_flag);
+             allowed_cost, cy, prune_flags, nullify_flag);
 
       /* Restore value of dest. reg.  Move to CRECURSE_2OP???  */
       values[d] = old_d;
@@ -338,8 +338,8 @@ recurse(opcode_t opcode,
   else if (goal_value == v)
     {
       /* We are at a leaf node and got the right answer for the
-	 random value operands.  However, we probably have an
-	 incorrect sequence.  Call test_sequence to find out.  */
+         random value operands.  However, we probably have an
+         incorrect sequence.  Call test_sequence to find out.  */
 
 #if __GNUC__
       sequence[n_insns] = (insn_t) {opcode, s1, s2, d};
@@ -365,21 +365,21 @@ recurse(opcode_t opcode,
 
 static inline void
 recurse_last(opcode_t opcode,
-	     int d,
-	     int s1,
-	     int s2,
-	     word v,
-	     insn_t *sequence,
-	     int n_insns,
-	     const word goal_value)
+             int d,
+             int s1,
+             int s2,
+             word v,
+             insn_t *sequence,
+             int n_insns,
+             const word goal_value)
 {
   insn_t insn;
 
   if (goal_value == v)
     {
       /* We are at a leaf node and got the right answer for the
-	 random value operands.  However, we probably have an
-	 incorrect sequence.  Call test_sequence to find out.  */
+         random value operands.  However, we probably have an
+         incorrect sequence.  Call test_sequence to find out.  */
 
 #if __GNUC__
       sequence[n_insns] = (insn_t) {opcode, s1, s2, d};
@@ -498,854 +498,854 @@ output_assembly(insn_t insn)
 #if SPARC
     case COPY:
       if (IMMEDIATE_P(s1) && (IMMEDIATE_VAL(s1) & 0x1fff) == 0)
-	printf("sethi	%s,%s",NAME(s1),NAME(d));
+        printf("sethi   %s,%s",NAME(s1),NAME(d));
       else
-	printf("mov	%s,%s",NAME(s1),NAME(d));
+        printf("mov     %s,%s",NAME(s1),NAME(d));
       break;
-    case ADD:	printf("add	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case ADD_CI:printf("addx	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case ADD_CO:printf("addcc	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case ADD_CIO:printf("addxcc	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case ADD:   printf("add     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case ADD_CI:printf("addx    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case ADD_CO:printf("addcc   %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case ADD_CIO:printf("addxcc %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
-	printf("xnor	%%g0,%s,%s",NAME(s2),NAME(d));
+        printf("xnor    %%g0,%s,%s",NAME(s2),NAME(d));
       else
-	printf("sub	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
-    case SUB_CI:printf("subx	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case SUB_CO:printf("subcc	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case SUB_CIO:printf("subxcc	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case AND:	printf("and	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case IOR:	printf("or	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case XOR:	printf("xor	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case ANDC:	printf("andn	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case IORC:	printf("orn	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case EQV:	printf("xnor	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case LSHIFTR:printf("srl	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case ASHIFTR:printf("sra	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case SHIFTL:printf("sll	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case SUB_CI:printf("subx    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case SUB_CO:printf("subcc   %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case SUB_CIO:printf("subxcc %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case AND:   printf("and     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case IOR:   printf("or      %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case XOR:   printf("xor     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case ANDC:  printf("andn    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case IORC:  printf("orn     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case EQV:   printf("xnor    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case LSHIFTR:printf("srl    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case ASHIFTR:printf("sra    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case SHIFTL:printf("sll     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
 #elif POWER
-#ifdef POWERPC			/* redefine the PowerPC names */
-#define INS_LIL		"li"
-#define INS_LIU		"li"
-#define INS_ORIL	"ori"
-#define INS_CAL		"addi"
-#define	INS_CAU		"addis"
-#define	INS_CAX		"add"
-#define	INS_AI		"addic"
-#define	INS_A		"addc"
-#define	INS_AME		"addme"
-#define	INS_AZE		"aze"
-#define	INS_AE		"adde"
-#define	INS_NEG		"neg"
-#define	INS_SF		"subfc"
-#define	INS_SUBF	"subf"
-#define	INS_SFI		"subfic"
-#define	INS_SFME	"subfme"
-#define	INS_SFZE	"subfze"
-#define	INS_SFE		"subfe"
-#define	INS_AND		"and"
-#define	INS_ORIU	"oris"
-#define	INS_ORIL	"ori"
-#define	INS_OR		"or"
-#define	INS_XORIL	"xori"
-#define	INS_XORIU	"xoris"
-#define	INS_XOR		"xor"
-#define	INS_ANDC	"andc"
-#define	INS_ORC		"orc"
-#define	INS_EQV		"eqv"
-#define	INS_NAND	"nand"
-#define	INS_NOR		"nor"
-#define	INS_SRI		"srwi"
-#define	INS_SRE		"srw"
-#define	INS_SRAI	"srawi"
-#define	INS_SREA	"sraw"
-#define	INS_SLI		"slwi"
-#define	INS_SLE		"slw"
-#define	INS_RLINM	"rlwimi"
-#define	INS_RLNM	"rlwnm"
-#define	INS_MULI	"mulli"
-#define	INS_MULS	"mullw"
-#define	INS_CNTLZ	"cntlzw"
-#define	INS_ABS		"abs (illegal)"
-#define	INS_NABS	"nabs (illegal)"
-#define	INS_DOZI	"dozi (illegal)"
-#define	INS_DOZ		"doz (illegal)"
+#ifdef POWERPC                  /* redefine the PowerPC names */
+#define INS_LIL         "li"
+#define INS_LIU         "li"
+#define INS_ORIL        "ori"
+#define INS_CAL         "addi"
+#define INS_CAU         "addis"
+#define INS_CAX         "add"
+#define INS_AI          "addic"
+#define INS_A           "addc"
+#define INS_AME         "addme"
+#define INS_AZE         "aze"
+#define INS_AE          "adde"
+#define INS_NEG         "neg"
+#define INS_SF          "subfc"
+#define INS_SUBF        "subf"
+#define INS_SFI         "subfic"
+#define INS_SFME        "subfme"
+#define INS_SFZE        "subfze"
+#define INS_SFE         "subfe"
+#define INS_AND         "and"
+#define INS_ORIU        "oris"
+#define INS_ORIL        "ori"
+#define INS_OR          "or"
+#define INS_XORIL       "xori"
+#define INS_XORIU       "xoris"
+#define INS_XOR         "xor"
+#define INS_ANDC        "andc"
+#define INS_ORC         "orc"
+#define INS_EQV         "eqv"
+#define INS_NAND        "nand"
+#define INS_NOR         "nor"
+#define INS_SRI         "srwi"
+#define INS_SRE         "srw"
+#define INS_SRAI        "srawi"
+#define INS_SREA        "sraw"
+#define INS_SLI         "slwi"
+#define INS_SLE         "slw"
+#define INS_RLINM       "rlwimi"
+#define INS_RLNM        "rlwnm"
+#define INS_MULI        "mulli"
+#define INS_MULS        "mullw"
+#define INS_CNTLZ       "cntlzw"
+#define INS_ABS         "abs (illegal)"
+#define INS_NABS        "nabs (illegal)"
+#define INS_DOZI        "dozi (illegal)"
+#define INS_DOZ         "doz (illegal)"
 
 #else  /* Power names, not PowerPC */
-#define INS_LIL		"lil"
-#define INS_LIU		"liu"
-#define INS_ORIL	"oril"
-#define INS_CAL		"cal"
-#define	INS_CAU		"cau"
-#define	INS_CAX		"cax"
-#define	INS_AI		"ai"
-#define	INS_A		"a"
-#define	INS_AME		"ame"
-#define	INS_AZE		"aze"
-#define	INS_AE		"ae"
-#define	INS_NEG		"neg"
-#define	INS_SF		"sf"
-#define	INS_SUBF	"subf (illegal)"
-#define	INS_SFI		"sfi"
-#define	INS_SFME	"sfme"
-#define	INS_SFZE	"sfze"
-#define	INS_SFE		"sfe"
-#define	INS_AND		"and"
-#define	INS_ORIU	"oriu"
-#define	INS_ORIL	"oril"
-#define	INS_OR		"or"
-#define	INS_XORIL	"xoril"
-#define	INS_XORIU	"xoriu"
-#define	INS_XOR		"xor"
-#define	INS_ANDC	"andc"
-#define	INS_ORC		"orc"
-#define	INS_EQV		"eqv"
-#define	INS_NAND	"nand"
-#define	INS_NOR		"nor"
-#define	INS_SRI		"sri"
-#define	INS_SRE		"sre"
-#define	INS_SRAI	"srai"
-#define	INS_SREA	"srea"
-#define	INS_SLI		"sli"
-#define	INS_SLE		"sle"
-#define	INS_RLINM	"rlinm"
-#define	INS_RLNM	"rlnm"
-#define	INS_MULI	"muli"
-#define	INS_MULS	"muls"
-#define	INS_CNTLZ	"cntlz"
-#define	INS_ABS		"abs"
-#define	INS_NABS	"nabs"
-#define	INS_DOZI	"dozi"
-#define	INS_DOZ		"doz"
+#define INS_LIL         "lil"
+#define INS_LIU         "liu"
+#define INS_ORIL        "oril"
+#define INS_CAL         "cal"
+#define INS_CAU         "cau"
+#define INS_CAX         "cax"
+#define INS_AI          "ai"
+#define INS_A           "a"
+#define INS_AME         "ame"
+#define INS_AZE         "aze"
+#define INS_AE          "ae"
+#define INS_NEG         "neg"
+#define INS_SF          "sf"
+#define INS_SUBF        "subf (illegal)"
+#define INS_SFI         "sfi"
+#define INS_SFME        "sfme"
+#define INS_SFZE        "sfze"
+#define INS_SFE         "sfe"
+#define INS_AND         "and"
+#define INS_ORIU        "oriu"
+#define INS_ORIL        "oril"
+#define INS_OR          "or"
+#define INS_XORIL       "xoril"
+#define INS_XORIU       "xoriu"
+#define INS_XOR         "xor"
+#define INS_ANDC        "andc"
+#define INS_ORC         "orc"
+#define INS_EQV         "eqv"
+#define INS_NAND        "nand"
+#define INS_NOR         "nor"
+#define INS_SRI         "sri"
+#define INS_SRE         "sre"
+#define INS_SRAI        "srai"
+#define INS_SREA        "srea"
+#define INS_SLI         "sli"
+#define INS_SLE         "sle"
+#define INS_RLINM       "rlinm"
+#define INS_RLNM        "rlnm"
+#define INS_MULI        "muli"
+#define INS_MULS        "muls"
+#define INS_CNTLZ       "cntlz"
+#define INS_ABS         "abs"
+#define INS_NABS        "nabs"
+#define INS_DOZI        "dozi"
+#define INS_DOZ         "doz"
 #endif /* POWER */
 
     case COPY:
       if (IMMEDIATE_P(s1))
-	{
-	  if (IMMEDIATE_VAL(s1) >= 0 && IMMEDIATE_VAL(s1) < 0x8000)
-	    printf("%s\t%s,0x%x",INS_LIL,NAME(d),IMMEDIATE_VAL(s1));
-	  else
-	    printf("%s\t%s,%s",INS_LIU,NAME(d),NAME(s1));
-	}
+        {
+          if (IMMEDIATE_VAL(s1) >= 0 && IMMEDIATE_VAL(s1) < 0x8000)
+            printf("%s\t%s,0x%x",INS_LIL,NAME(d),IMMEDIATE_VAL(s1));
+          else
+            printf("%s\t%s,%s",INS_LIU,NAME(d),NAME(s1));
+        }
       else
-	printf("%s\t%s,%s,0",INS_ORIL,NAME(d),NAME(s1));
+        printf("%s\t%s,%s,0",INS_ORIL,NAME(d),NAME(s1));
       break;
     case ADD:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) + 0x4000 < 0x8000)
-	    printf("%s\t%s,%d(%s)",INS_CAL,NAME(d),IMMEDIATE_VAL(s2),NAME(s1));
-	  else if ((IMMEDIATE_VAL(s2) & 0xffff) == 0)
-	    printf("%s\t%s,%s,0x%x",INS_CAU,NAME(d),NAME(s1),IMMEDIATE_VAL(s2) >> 16);
-	  else
-	    abort ();
-	}
+        {
+          if (IMMEDIATE_VAL(s2) + 0x4000 < 0x8000)
+            printf("%s\t%s,%d(%s)",INS_CAL,NAME(d),IMMEDIATE_VAL(s2),NAME(s1));
+          else if ((IMMEDIATE_VAL(s2) & 0xffff) == 0)
+            printf("%s\t%s,%s,0x%x",INS_CAU,NAME(d),NAME(s1),IMMEDIATE_VAL(s2) >> 16);
+          else
+            abort ();
+        }
       else
-	printf("%s\t%s,%s,%s",INS_CAX,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_CAX,NAME(d),NAME(s1),NAME(s2));
       break;
     case ADD_CO:
       if (IMMEDIATE_P(s2))
-	printf("%s\t%s,%s,%s",INS_AI,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_AI,NAME(d),NAME(s1),NAME(s2));
       else
-	printf("%s\t%s,%s,%s",INS_A,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_A,NAME(d),NAME(s1),NAME(s2));
       break;
     case ADD_CIO:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) == -1)
-	    printf("%s\t%s,%s",INS_AME,NAME(d),NAME(s1));
-	  else if (IMMEDIATE_VAL(s2) == 0)
-	    printf("%s\t%s,%s",INS_AZE,NAME(d),NAME(s1));
-	}
+        {
+          if (IMMEDIATE_VAL(s2) == -1)
+            printf("%s\t%s,%s",INS_AME,NAME(d),NAME(s1));
+          else if (IMMEDIATE_VAL(s2) == 0)
+            printf("%s\t%s,%s",INS_AZE,NAME(d),NAME(s1));
+        }
       else
-	printf("%s\t%s,%s,%s",INS_AE,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_AE,NAME(d),NAME(s1),NAME(s2));
       break;
     case SUB:
       if (IMMEDIATE_P(s1))
-	{
-	  if (IMMEDIATE_VAL(s1) == 0)
-	    printf("%s\t%s,%s",INS_NEG,NAME(d),NAME(s2));
-	  else if (IMMEDIATE_VAL(s1) == -1)
-	    printf("%s\t%s,%s,%s",INS_NAND,NAME(d),NAME(s2),NAME(s2));
-	}
+        {
+          if (IMMEDIATE_VAL(s1) == 0)
+            printf("%s\t%s,%s",INS_NEG,NAME(d),NAME(s2));
+          else if (IMMEDIATE_VAL(s1) == -1)
+            printf("%s\t%s,%s,%s",INS_NAND,NAME(d),NAME(s2),NAME(s2));
+        }
       else
-	printf("%s\t%s,%s,%s",INS_SUBF,NAME(d),NAME(s2),NAME(s1));
+        printf("%s\t%s,%s,%s",INS_SUBF,NAME(d),NAME(s2),NAME(s1));
       break;
     case ADC_CO:
       if (IMMEDIATE_P(s1))
-	printf("%s\t%s,%s,%s",INS_SFI,NAME(d),NAME(s2),NAME(s1));
+        printf("%s\t%s,%s,%s",INS_SFI,NAME(d),NAME(s2),NAME(s1));
       else
-	printf("%s\t%s,%s,%s",INS_SF,NAME(d),NAME(s2),NAME(s1));
+        printf("%s\t%s,%s,%s",INS_SF,NAME(d),NAME(s2),NAME(s1));
       break;
     case ADC_CIO:
       if (IMMEDIATE_P(s1))
-	{
-	  if (IMMEDIATE_VAL(s1) == -1)
-	    printf("%s\t%s,%s",INS_SFME,NAME(d),NAME(s2));
-	  else if (IMMEDIATE_VAL(s1) == 0)
-	    printf("%s\t%s,%s",INS_SFZE,NAME(d),NAME(s2));
-	  else abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s1) == -1)
+            printf("%s\t%s,%s",INS_SFME,NAME(d),NAME(s2));
+          else if (IMMEDIATE_VAL(s1) == 0)
+            printf("%s\t%s,%s",INS_SFZE,NAME(d),NAME(s2));
+          else abort();
+        }
       else
-	printf("%s\t%s,%s,%s",INS_SFE,NAME(d),NAME(s2),NAME(s1));
+        printf("%s\t%s,%s,%s",INS_SFE,NAME(d),NAME(s2),NAME(s1));
       break;
     case AND:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) == 0x80000000)
-	    printf("%s\t%s,%s,0,0,0",INS_RLINM,NAME(d),NAME(s1));
-	  else if (IMMEDIATE_VAL(s2) == 0x7fffffff)
-	    printf("%s\t%s,%s,0,1,31",INS_RLINM,NAME(d),NAME(s1));
-	  else if (IMMEDIATE_VAL(s2) == 1)
-	    printf("%s\t%s,%s,0,31,31",INS_RLINM,NAME(d),NAME(s1));
-	  else abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s2) == 0x80000000)
+            printf("%s\t%s,%s,0,0,0",INS_RLINM,NAME(d),NAME(s1));
+          else if (IMMEDIATE_VAL(s2) == 0x7fffffff)
+            printf("%s\t%s,%s,0,1,31",INS_RLINM,NAME(d),NAME(s1));
+          else if (IMMEDIATE_VAL(s2) == 1)
+            printf("%s\t%s,%s,0,31,31",INS_RLINM,NAME(d),NAME(s1));
+          else abort();
+        }
       else
-	printf("%s\t%s,%s,%s",INS_AND,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_AND,NAME(d),NAME(s1),NAME(s2));
       break;
     case IOR:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) == 0x80000000)
-	    printf("%s\t%s,%s,0x8000",INS_ORIU,NAME(d),NAME(s1));
-	  else abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s2) == 0x80000000)
+            printf("%s\t%s,%s,0x8000",INS_ORIU,NAME(d),NAME(s1));
+          else abort();
+        }
       else
-	printf("%s\t%s,%s,%s",INS_OR,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_OR,NAME(d),NAME(s1),NAME(s2));
       break;
     case XOR:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) == 1)
-	    printf("%s\t%s,%s,1",INS_XORIL,NAME(d),NAME(s1));
-	  else if (IMMEDIATE_VAL(s2) == 0x80000000)
-	    printf("%s\t%s,%s,0x8000",INS_XORIU,NAME(d),NAME(s1));
-	  else abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s2) == 1)
+            printf("%s\t%s,%s,1",INS_XORIL,NAME(d),NAME(s1));
+          else if (IMMEDIATE_VAL(s2) == 0x80000000)
+            printf("%s\t%s,%s,0x8000",INS_XORIU,NAME(d),NAME(s1));
+          else abort();
+        }
       else
-	printf("%s\t%s,%s,%s",INS_XOR,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_XOR,NAME(d),NAME(s1),NAME(s2));
       break;
-    case ANDC:	printf("%s\t%s,%s,%s",INS_ANDC,NAME(d),NAME(s1),NAME(s2));break;
-    case IORC:	printf("%s\t%s,%s,%s",INS_ORC,NAME(d),NAME(s1),NAME(s2));break;
-    case EQV:	printf("%s\t%s,%s,%s",INS_EQV,NAME(d),NAME(s1),NAME(s2));break;
-    case NAND:	printf("%s\t%s,%s,%s",INS_NAND,NAME(d),NAME(s1),NAME(s2));break;
-    case NOR:	printf("%s\t%s,%s,%s",INS_NOR,NAME(d),NAME(s1),NAME(s2));break;
+    case ANDC:  printf("%s\t%s,%s,%s",INS_ANDC,NAME(d),NAME(s1),NAME(s2));break;
+    case IORC:  printf("%s\t%s,%s,%s",INS_ORC,NAME(d),NAME(s1),NAME(s2));break;
+    case EQV:   printf("%s\t%s,%s,%s",INS_EQV,NAME(d),NAME(s1),NAME(s2));break;
+    case NAND:  printf("%s\t%s,%s,%s",INS_NAND,NAME(d),NAME(s1),NAME(s2));break;
+    case NOR:   printf("%s\t%s,%s,%s",INS_NOR,NAME(d),NAME(s1),NAME(s2));break;
     case LSHIFTR:
       if (IMMEDIATE_P(s2))
-	printf("%s\t%s,%s,%s",INS_SRI,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_SRI,NAME(d),NAME(s1),NAME(s2));
       else
-	printf("%s\t%s,%s,%s",INS_SRE,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_SRE,NAME(d),NAME(s1),NAME(s2));
       break;
     case ASHIFTR_CON:
       if (IMMEDIATE_P(s2))
-	printf("%s\t%s,%s,%s",INS_SRAI,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_SRAI,NAME(d),NAME(s1),NAME(s2));
       else
-	printf("%s\t%s,%s,%s",INS_SREA,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_SREA,NAME(d),NAME(s1),NAME(s2));
       break;
     case SHIFTL:
       if (IMMEDIATE_P(s2))
-	printf("%s\t%s,%s,%s",INS_SLI,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_SLI,NAME(d),NAME(s1),NAME(s2));
       else
-	printf("%s\t%s,%s,%s",INS_SLE,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s",INS_SLE,NAME(d),NAME(s1),NAME(s2));
       break;
     case ROTATEL:
       if (IMMEDIATE_P(s2))
-	printf("%s\t%s,%s,%s,0,31",INS_RLINM,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s,0,31",INS_RLINM,NAME(d),NAME(s1),NAME(s2));
       else
-	printf("%s\t%s,%s,%s,0,31",INS_RLNM,NAME(d),NAME(s1),NAME(s2));
+        printf("%s\t%s,%s,%s,0,31",INS_RLNM,NAME(d),NAME(s1),NAME(s2));
       break;
 #ifndef POWERPC
     case ABSVAL:printf("%s\t%s,%s",INS_ABS,NAME(d),NAME(s1));break;
     case NABSVAL:printf("%s\t%s,%s",INS_NABS,NAME(d),NAME(s1));break;
     case DOZ:
       if (IMMEDIATE_P(s1))
-	printf("%s\t%s,%s,%s",INS_DOZI,NAME(d),NAME(s2),NAME(s1));
+        printf("%s\t%s,%s,%s",INS_DOZI,NAME(d),NAME(s2),NAME(s1));
       else
-	printf("%s\t%s,%s,%s",INS_DOZ,NAME(d),NAME(s2),NAME(s1));
+        printf("%s\t%s,%s,%s",INS_DOZ,NAME(d),NAME(s2),NAME(s1));
       break;
 #endif
     case MUL:
       if (IMMEDIATE_P(s1))
-	printf("%s\t%s,%s,%s",INS_MULI,NAME(d),NAME(s2),NAME(s1));
+        printf("%s\t%s,%s,%s",INS_MULI,NAME(d),NAME(s2),NAME(s1));
       else
-	printf("%s\t%s,%s,%s",INS_MULS,NAME(d),NAME(s2),NAME(s1));
+        printf("%s\t%s,%s,%s",INS_MULS,NAME(d),NAME(s2),NAME(s1));
       break;
     case CLZ:
       printf("%s\t%s,%s",INS_CNTLZ,NAME(d),NAME(s1));break;
 #elif M88000
     case COPY:
       if (IMMEDIATE_P(s1))
-	{
-	  if ((IMMEDIATE_VAL(s1) & 0xffff) == 0)
-	    printf("or.u	%s,r0,0x%x",NAME(d),IMMEDIATE_VAL(s1));
-	  else if ((IMMEDIATE_VAL(s1) & 0xffff0000) == 0)
-	    printf("or	%s,r0,0x%x",NAME(d),IMMEDIATE_VAL(s1));
-	  else if ((IMMEDIATE_VAL(s1) & 0xffff0000) == 0xffff0000)
-	    printf("subu	%s,r0,0x%x",NAME(d),-IMMEDIATE_VAL(s1));
-	  else
-	    {
-	      word x = IMMEDIATE_VAL(s1);
-	      int i, j;
-	      for (i = 31; i > 0; i--)
-		if ((x & (1 << i)) != 0)
-		  break;
-	      for (j = i; j >= 0; j--)
-		if ((x & (1 << j)) == 0)
-		  break;
-	      printf("set	%s,r0,%d<%d>",NAME(d), i - j, j + 1);
-	    }
-	}
+        {
+          if ((IMMEDIATE_VAL(s1) & 0xffff) == 0)
+            printf("or.u        %s,r0,0x%x",NAME(d),IMMEDIATE_VAL(s1));
+          else if ((IMMEDIATE_VAL(s1) & 0xffff0000) == 0)
+            printf("or  %s,r0,0x%x",NAME(d),IMMEDIATE_VAL(s1));
+          else if ((IMMEDIATE_VAL(s1) & 0xffff0000) == 0xffff0000)
+            printf("subu        %s,r0,0x%x",NAME(d),-IMMEDIATE_VAL(s1));
+          else
+            {
+              word x = IMMEDIATE_VAL(s1);
+              int i, j;
+              for (i = 31; i > 0; i--)
+                if ((x & (1 << i)) != 0)
+                  break;
+              for (j = i; j >= 0; j--)
+                if ((x & (1 << j)) == 0)
+                  break;
+              printf("set       %s,r0,%d<%d>",NAME(d), i - j, j + 1);
+            }
+        }
       else
-	printf("or	%s,%s",NAME(d),NAME(s1));
+        printf("or      %s,%s",NAME(d),NAME(s1));
       break;
-    case ADD:	printf("addu	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case ADD_CI:printf("addu.ci	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case ADD_CO:printf("addu.co	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ADD:   printf("addu    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ADD_CI:printf("addu.ci %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ADD_CO:printf("addu.co %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case ADD_CIO:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) == -1)
-	    {
-	      printf("subu.cio %s,%s,r0",NAME(d),NAME(s1));
-	      break;
-	    }
-	  if (IMMEDIATE_VAL(s2) != 0)
-	    abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s2) == -1)
+            {
+              printf("subu.cio %s,%s,r0",NAME(d),NAME(s1));
+              break;
+            }
+          if (IMMEDIATE_VAL(s2) != 0)
+            abort();
+        }
       printf("addu.cio %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
-	printf("xor.c	%s,%s,r0",NAME(d),NAME(s2));
+        printf("xor.c   %s,%s,r0",NAME(d),NAME(s2));
       else
-	printf("subu	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("subu    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
-    case ADC_CI:printf("subu.ci	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case ADC_CO:printf("subu.co	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ADC_CI:printf("subu.ci %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ADC_CO:printf("subu.co %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case ADC_CIO:printf("subu.cio %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case AND:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) == 0x80000000)
-	    printf("mask.u	%s,%s,0x8000",NAME(d),NAME(s1));
-	  else if (IMMEDIATE_VAL(s2) == 0x7fffffff)
-	    printf("and.u	%s,%s,0x7fff",NAME(d),NAME(s1));
-	  else if (IMMEDIATE_VAL(s2) == 1)
-	    printf("mask	%s,%s,1",NAME(d),NAME(s1));
-	  else abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s2) == 0x80000000)
+            printf("mask.u      %s,%s,0x8000",NAME(d),NAME(s1));
+          else if (IMMEDIATE_VAL(s2) == 0x7fffffff)
+            printf("and.u       %s,%s,0x7fff",NAME(d),NAME(s1));
+          else if (IMMEDIATE_VAL(s2) == 1)
+            printf("mask        %s,%s,1",NAME(d),NAME(s1));
+          else abort();
+        }
       else
-	printf("and	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("and     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case IOR:
       if (IMMEDIATE_P(s2))
-	{
-	  if ((IMMEDIATE_VAL(s2) & 0xffff) == 0)
-	    printf("or.u	%s,%s,0x%x",NAME(d),NAME(s1),
-		   IMMEDIATE_VAL(s2)>>16);
-	  else if (IMMEDIATE_VAL(s2) < 0x10000)
-	    printf("or	%s,%s,0x%x",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
-	  else abort();
-	}
+        {
+          if ((IMMEDIATE_VAL(s2) & 0xffff) == 0)
+            printf("or.u        %s,%s,0x%x",NAME(d),NAME(s1),
+                   IMMEDIATE_VAL(s2)>>16);
+          else if (IMMEDIATE_VAL(s2) < 0x10000)
+            printf("or  %s,%s,0x%x",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
+          else abort();
+        }
       else
-	printf("or	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("or      %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case XOR:
       if (IMMEDIATE_P(s2))
-	{
-	  if ((IMMEDIATE_VAL(s2) & 0xffff) == 0)
-	    printf("xor.u	%s,%s,0x%x",NAME(d),NAME(s1),
-		   IMMEDIATE_VAL(s2)>>16);
-	  else if (IMMEDIATE_VAL(s2) < 0x10000)
-	    printf("xor	%s,%s,0x%x",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
-	  else abort();
-	}
+        {
+          if ((IMMEDIATE_VAL(s2) & 0xffff) == 0)
+            printf("xor.u       %s,%s,0x%x",NAME(d),NAME(s1),
+                   IMMEDIATE_VAL(s2)>>16);
+          else if (IMMEDIATE_VAL(s2) < 0x10000)
+            printf("xor %s,%s,0x%x",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
+          else abort();
+        }
       else
-	printf("xor	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("xor     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
-    case ANDC:	printf("and.c	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case IORC:	printf("or.c	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case EQV:	printf("xor.c	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case LSHIFTR:printf("extu	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case ASHIFTR:printf("ext	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case SHIFTL:printf("mak	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ANDC:  printf("and.c   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case IORC:  printf("or.c    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case EQV:   printf("xor.c   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case LSHIFTR:printf("extu   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ASHIFTR:printf("ext    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case SHIFTL:printf("mak     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case ROTATEL:
-      printf("rot	%s,%s,%d",NAME(d),NAME(s1),32-IMMEDIATE_VAL(s2));
+      printf("rot       %s,%s,%d",NAME(d),NAME(s1),32-IMMEDIATE_VAL(s2));
       break;
     case FF1:
-      printf("ff1	%s,%s",NAME(d),NAME(s1));break;
+      printf("ff1       %s,%s",NAME(d),NAME(s1));break;
     case FF0:
-      printf("ff0	%s,%s",NAME(d),NAME(s1));break;
+      printf("ff0       %s,%s",NAME(d),NAME(s1));break;
     case CMPPAR:
       if (IMMEDIATE_P(s2))
-	printf("cmp	%s,%s,0x%x",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
+        printf("cmp     %s,%s,0x%x",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
       else if (IMMEDIATE_P(s1))
-	printf("cmp	%s,r0,%s",NAME(d),NAME(s2));
+        printf("cmp     %s,r0,%s",NAME(d),NAME(s2));
       else
-	printf("cmp	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("cmp     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case EXTS1:
-      printf("ext	%s,%s,1<%d>",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
+      printf("ext       %s,%s,1<%d>",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
       break;
     case EXTS2:
-      printf("ext	%s,%s,2<%d>",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
+      printf("ext       %s,%s,2<%d>",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
       break;
     case EXTU1:
-      printf("extu	%s,%s,1<%d>",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
+      printf("extu      %s,%s,1<%d>",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
       break;
     case EXTU2:
-      printf("extu	%s,%s,2<%d>",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
+      printf("extu      %s,%s,2<%d>",NAME(d),NAME(s1),IMMEDIATE_VAL(s2));
       break;
     case MUL:
-      printf("mul	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+      printf("mul       %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
 #elif AM29K
     case COPY:
       if (IMMEDIATE_P(s1))
-	{
-	  if (IMMEDIATE_VAL(s1) < 0x10000)
-	    printf("const	%s,0x%x",NAME(d),IMMEDIATE_VAL(s1));
-	  else if (-IMMEDIATE_VAL(s1) < 0x10000)
-	    printf("constn	%s,-0x%x",NAME(d),-IMMEDIATE_VAL(s1));
-	  else if (IMMEDIATE_VAL(s1) == 0x80000000)
-	    printf("cpeq	%s,gr1,gr1",NAME(d));
-	  else abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s1) < 0x10000)
+            printf("const       %s,0x%x",NAME(d),IMMEDIATE_VAL(s1));
+          else if (-IMMEDIATE_VAL(s1) < 0x10000)
+            printf("constn      %s,-0x%x",NAME(d),-IMMEDIATE_VAL(s1));
+          else if (IMMEDIATE_VAL(s1) == 0x80000000)
+            printf("cpeq        %s,gr1,gr1",NAME(d));
+          else abort();
+        }
       else
-	printf("or	%s,%s,0",NAME(d),NAME(s1));
+        printf("or      %s,%s,0",NAME(d),NAME(s1));
       break;
     case ADD_CO:
       if (IMMEDIATE_P(s2) && (signed_word) IMMEDIATE_VAL(s2) < 0)
-	printf("sub	%s,%s,0x%x",NAME(d),NAME(s1),-IMMEDIATE_VAL(s2));
+        printf("sub     %s,%s,0x%x",NAME(d),NAME(s1),-IMMEDIATE_VAL(s2));
       else
-	printf("add	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("add     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case ADD_CIO:
       if (IMMEDIATE_P(s2) && (signed_word) IMMEDIATE_VAL(s2) < 0)
-	printf("subc	%s,%s,0x%x",NAME(d),NAME(s1),-IMMEDIATE_VAL(s2));
+        printf("subc    %s,%s,0x%x",NAME(d),NAME(s1),-IMMEDIATE_VAL(s2));
       else
-	printf("addc	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("addc    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
-	printf("nor	%s,%s,0",NAME(d),NAME(s2));
+        printf("nor     %s,%s,0",NAME(d),NAME(s2));
       else abort();
       break;
-    case ADC_CO:printf("sub	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case ADC_CIO:printf("subc	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case AND:	printf("and	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case IOR:	printf("or	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case XOR:	printf("xor	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case ANDC:	printf("andn	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case EQV:	printf("xnor	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case NAND:	printf("nand	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case NOR:	printf("nor	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case LSHIFTR:printf("srl	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case ASHIFTR:printf("sra	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case SHIFTL:printf("sll	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPEQ:	printf("cpeq	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPGE:	printf("cpge	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPGEU:	printf("cpgeu	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPGT:	printf("cpgt	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPGTU:	printf("cpgtu	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPLE:	printf("cple	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPLEU:	printf("cpleu	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPLT:	printf("cplt	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPLTU:	printf("cpltu	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
-    case CPNEQ:	printf("cpneq	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ADC_CO:printf("sub     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ADC_CIO:printf("subc   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case AND:   printf("and     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case IOR:   printf("or      %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case XOR:   printf("xor     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ANDC:  printf("andn    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case EQV:   printf("xnor    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case NAND:  printf("nand    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case NOR:   printf("nor     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case LSHIFTR:printf("srl    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case ASHIFTR:printf("sra    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case SHIFTL:printf("sll     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPEQ:  printf("cpeq    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPGE:  printf("cpge    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPGEU: printf("cpgeu   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPGT:  printf("cpgt    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPGTU: printf("cpgtu   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPLE:  printf("cple    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPLEU: printf("cpleu   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPLT:  printf("cplt    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPLTU: printf("cpltu   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+    case CPNEQ: printf("cpneq   %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case MUL:
-      printf("multiply	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+      printf("multiply  %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case CLZ:
-      printf("clz	%s,%s",NAME(d),NAME(s1));break;
+      printf("clz       %s,%s",NAME(d),NAME(s1));break;
 #elif M68000
     case COPY:
       if (IMMEDIATE_P(s1))
-	{
-	  if ((signed_word) IMMEDIATE_VAL(s1) >= -128
-	      && (signed_word) IMMEDIATE_VAL(s1) < 128)
-	    {
-	      printf("moveq	#%ld,%s", IMMEDIATE_VAL(s1),NAME(d));
-	      break;
-	    }
-	}
-      printf("movel	%s,%s",NAME(s1),NAME(d));
+        {
+          if ((signed_word) IMMEDIATE_VAL(s1) >= -128
+              && (signed_word) IMMEDIATE_VAL(s1) < 128)
+            {
+              printf("moveq     #%ld,%s", IMMEDIATE_VAL(s1),NAME(d));
+              break;
+            }
+        }
+      printf("movel     %s,%s",NAME(s1),NAME(d));
       break;
     case EXCHANGE:
-      printf("exgl	%s,%s",NAME(s2),NAME(d));break;
+      printf("exgl      %s,%s",NAME(s2),NAME(d));break;
     case ADD_CO:
       if (IMMEDIATE_P(s2)
-	  && IMMEDIATE_VAL(s2) >= 1 && IMMEDIATE_VAL(s2) <= 8)
-	printf("addql	%s,%s",NAME(s2),NAME(d));
+          && IMMEDIATE_VAL(s2) >= 1 && IMMEDIATE_VAL(s2) <= 8)
+        printf("addql   %s,%s",NAME(s2),NAME(d));
       else
-	printf("addl	%s,%s",NAME(s2),NAME(d));
+        printf("addl    %s,%s",NAME(s2),NAME(d));
       break;
     case ADD_CIO:
-      printf("addxl	%s,%s",NAME(s2),NAME(d));break;
+      printf("addxl     %s,%s",NAME(s2),NAME(d));break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
-	printf("notl	%s",NAME(d));
+        printf("notl    %s",NAME(d));
       else abort();
       break;
     case SUB_CO:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == 0)
-	printf("negl	%s",NAME(d));
+        printf("negl    %s",NAME(d));
       else if (IMMEDIATE_P(s2)
-	       && IMMEDIATE_VAL(s2) >= 1 && IMMEDIATE_VAL(s2) <= 8)
-	printf("subql	%s,%s",NAME(s2),NAME(d));
+               && IMMEDIATE_VAL(s2) >= 1 && IMMEDIATE_VAL(s2) <= 8)
+        printf("subql   %s,%s",NAME(s2),NAME(d));
       else
-	printf("subl	%s,%s",NAME(s2),NAME(d));
+        printf("subl    %s,%s",NAME(s2),NAME(d));
       break;
     case SUB_CIO:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == 0)
-	printf("negxl	%s",NAME(d));
+        printf("negxl   %s",NAME(d));
       else
-	printf("subxl	%s,%s",NAME(s2),NAME(d));
+        printf("subxl   %s,%s",NAME(s2),NAME(d));
       break;
     case AND:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) + 0x8000 < 0x10000)
-	printf("andw	%s,%s",NAME(s2),NAME(d));
+        printf("andw    %s,%s",NAME(s2),NAME(d));
       else
-	printf("andl	%s,%s",NAME(s2),NAME(d));
+        printf("andl    %s,%s",NAME(s2),NAME(d));
       break;
     case IOR:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) + 0x8000 < 0x10000)
-	printf("orw	%s,%s",NAME(s2),NAME(d));
+        printf("orw     %s,%s",NAME(s2),NAME(d));
       else
-	printf("orl	%s,%s",NAME(s2),NAME(d));
+        printf("orl     %s,%s",NAME(s2),NAME(d));
       break;
     case XOR:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) + 0x8000 < 0x10000)
-	printf("eorw	%s,%s",NAME(s2),NAME(d));
+        printf("eorw    %s,%s",NAME(s2),NAME(d));
       else
-	printf("eorl	%s,%s",NAME(s2),NAME(d));
+        printf("eorl    %s,%s",NAME(s2),NAME(d));
       break;
     case LSHIFTR_CO:
-      printf("lsrl	%s,%s",NAME(s2),NAME(d));break;
+      printf("lsrl      %s,%s",NAME(s2),NAME(d));break;
     case ASHIFTR_CO:
-      printf("asrl	%s,%s",NAME(s2),NAME(d));break;
+      printf("asrl      %s,%s",NAME(s2),NAME(d));break;
     case SHIFTL_CO:
-      printf("lsll	%s,%s",NAME(s2),NAME(d));break;
+      printf("lsll      %s,%s",NAME(s2),NAME(d));break;
     case ROTATEL_CO:
-      printf("roll	%s,%s",NAME(s2),NAME(d));break;
+      printf("roll      %s,%s",NAME(s2),NAME(d));break;
     case ROTATEXL_CIO:
-      printf("roxll	%s,%s",NAME(s2),NAME(d));break;
+      printf("roxll     %s,%s",NAME(s2),NAME(d));break;
     case ROTATER_CO:
-      printf("rorl	%s,%s",NAME(s2),NAME(d));break;
+      printf("rorl      %s,%s",NAME(s2),NAME(d));break;
     case ROTATEXR_CIO:
-      printf("roxrl	%s,%s",NAME(s2),NAME(d));break;
+      printf("roxrl     %s,%s",NAME(s2),NAME(d));break;
     case MUL:
-      printf("mulsl	%s,%s",NAME(s2),NAME(d));break;
+      printf("mulsl     %s,%s",NAME(s2),NAME(d));break;
 #elif I386
     case COPY:
-      printf("movl	%s,%s",NAME(s1),NAME(d));break;
+      printf("movl      %s,%s",NAME(s1),NAME(d));break;
     case BSF86:
-      printf("bsfl	%s,%s",NAME(s1),NAME(d));break;
+      printf("bsfl      %s,%s",NAME(s1),NAME(d));break;
     case EXCHANGE:
-      printf("xchgl	%s,%s",NAME(s2),NAME(d));break;
+      printf("xchgl     %s,%s",NAME(s2),NAME(d));break;
     case ADD:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) == 1)
-	    printf("incl	%s",NAME(d));
-	  else if (IMMEDIATE_VAL(s2) == -1)
-	    printf("decl	%s",NAME(d));
-	  else abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s2) == 1)
+            printf("incl        %s",NAME(d));
+          else if (IMMEDIATE_VAL(s2) == -1)
+            printf("decl        %s",NAME(d));
+          else abort();
+        }
       else abort();
       break;
     case ADD_CO:
-      printf("addl	%s,%s",NAME(s2),NAME(d));break;
+      printf("addl      %s,%s",NAME(s2),NAME(d));break;
     case ADD_CIO:
-      printf("adcl	%s,%s",NAME(s2),NAME(d));break;
+      printf("adcl      %s,%s",NAME(s2),NAME(d));break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
-	printf("notl	%s",NAME(d));
+        printf("notl    %s",NAME(d));
       else abort();
       break;
     case SUB_CO:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == 0)
-	printf("negl	%s",NAME(d));
+        printf("negl    %s",NAME(d));
       else
-	printf("subl	%s,%s",NAME(s2),NAME(d));
+        printf("subl    %s,%s",NAME(s2),NAME(d));
       break;
     case SUB_CIO:
-      printf("sbbl	%s,%s",NAME(s2),NAME(d));break;
+      printf("sbbl      %s,%s",NAME(s2),NAME(d));break;
     case CMP:
-      printf("cmpl	%s,%s",NAME(s2),NAME(s1));break;
+      printf("cmpl      %s,%s",NAME(s2),NAME(s1));break;
     case AND_RC:
       if (IMMEDIATE_P(s2) && (IMMEDIATE_VAL(s2) & 0xffffff00) == 0xffffff00)
-	printf("andb	$%d,%s",IMMEDIATE_VAL(s2),NAME(d));
+        printf("andb    $%d,%s",IMMEDIATE_VAL(s2),NAME(d));
       else
-	printf("andl	%s,%s",NAME(s2),NAME(d));
+        printf("andl    %s,%s",NAME(s2),NAME(d));
       break;
     case IOR_RC:
       if (IMMEDIATE_P(s2) && (IMMEDIATE_VAL(s2) & 0xffffff00) == 0)
-	printf("orb	$%d,%s",IMMEDIATE_VAL(s2),NAME(d));
+        printf("orb     $%d,%s",IMMEDIATE_VAL(s2),NAME(d));
       else
-	printf("orl	%s,%s",NAME(s2),NAME(d));
+        printf("orl     %s,%s",NAME(s2),NAME(d));
       break;
     case XOR_RC:
       if (IMMEDIATE_P(s2) && (IMMEDIATE_VAL(s2) & 0xffffff00) == 0)
-	printf("xorb	$%d,%s",IMMEDIATE_VAL(s2),NAME(d));
+        printf("xorb    $%d,%s",IMMEDIATE_VAL(s2),NAME(d));
       else
-	printf("xorl	%s,%s",NAME(s2),NAME(d));
+        printf("xorl    %s,%s",NAME(s2),NAME(d));
       break;
     case LSHIFTR_CO:
-      printf("shrl	%s,%s",NAME(s2),NAME(d));break;
+      printf("shrl      %s,%s",NAME(s2),NAME(d));break;
     case ASHIFTR_CO:
-      printf("sarl	%s,%s",NAME(s2),NAME(d));break;
+      printf("sarl      %s,%s",NAME(s2),NAME(d));break;
     case SHIFTL_CO:
-      printf("shll	%s,%s",NAME(s2),NAME(d));break;
+      printf("shll      %s,%s",NAME(s2),NAME(d));break;
     case ROTATEL_CO:
-      printf("roll	%s,%s",NAME(s2),NAME(d));break;
+      printf("roll      %s,%s",NAME(s2),NAME(d));break;
     case ROTATEXL_CIO:
-      printf("rlcl	%s,%s",NAME(s2),NAME(d));break;
+      printf("rlcl      %s,%s",NAME(s2),NAME(d));break;
     case ROTATER_CO:
-      printf("rorl	%s,%s",NAME(s2),NAME(d));break;
+      printf("rorl      %s,%s",NAME(s2),NAME(d));break;
     case ROTATEXR_CIO:
-      printf("rrcl	%s,%s",NAME(s2),NAME(d));break;
+      printf("rrcl      %s,%s",NAME(s2),NAME(d));break;
     case COMCY:
       printf("cmc");break;
     case MUL:
-      printf("imull	%s,%s",NAME(s2),NAME(d));break;
+      printf("imull     %s,%s",NAME(s2),NAME(d));break;
 #elif PYR
     case COPY:
-      printf("movw	%s,%s",NAME(s1),NAME(d));break;
+      printf("movw      %s,%s",NAME(s1),NAME(d));break;
     case EXCHANGE:
-      printf("xchw	%s,%s",NAME(s2),NAME(d));break;
+      printf("xchw      %s,%s",NAME(s2),NAME(d));break;
     case ADD:
-      printf("mova	0x%x(%s),%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+      printf("mova      0x%x(%s),%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       break;
     case ADD_CO:
-      printf("addw	%s,%s",NAME(s2),NAME(d));break;
+      printf("addw      %s,%s",NAME(s2),NAME(d));break;
     case ADD_CIO:
-      printf("addwc	%s,%s",NAME(s2),NAME(d));break;
+      printf("addwc     %s,%s",NAME(s2),NAME(d));break;
     case ADC_CO:
       if (IMMEDIATE_P(s1))
-	printf("rsubw	%s,%s",NAME(s1),NAME(d));
+        printf("rsubw   %s,%s",NAME(s1),NAME(d));
       else
-	printf("subw	%s,%s",NAME(s2),NAME(d));
+        printf("subw    %s,%s",NAME(s2),NAME(d));
       break;
     case ADC_CIO:
-      printf("subwb	%s,%s",NAME(s2),NAME(d));break;
+      printf("subwb     %s,%s",NAME(s2),NAME(d));break;
     case AND_CC:
-      printf("andw	%s,%s",NAME(s2),NAME(d));break;
+      printf("andw      %s,%s",NAME(s2),NAME(d));break;
     case IOR_CC:
-      printf("orw	%s,%s",NAME(s2),NAME(d));break;
+      printf("orw       %s,%s",NAME(s2),NAME(d));break;
     case XOR_CC:
-      printf("xorw	%s,%s",NAME(s2),NAME(d));break;
+      printf("xorw      %s,%s",NAME(s2),NAME(d));break;
     case ANDC_CC:
-      printf("bicw	%s,%s",NAME(s2),NAME(d));break;
+      printf("bicw      %s,%s",NAME(s2),NAME(d));break;
     case LSHIFTR_CO:
-      printf("lshrw	%s,%s",NAME(s2),NAME(d));break;
+      printf("lshrw     %s,%s",NAME(s2),NAME(d));break;
     case ASHIFTR_CO:
-      printf("ashrw	%s,%s",NAME(s2),NAME(d));break;
+      printf("ashrw     %s,%s",NAME(s2),NAME(d));break;
     case SHIFTL_CO:
-      printf("lshlw	%s,%s",NAME(s2),NAME(d));break;
+      printf("lshlw     %s,%s",NAME(s2),NAME(d));break;
     case ROTATEL_CO:
-      printf("rotlw	%s,%s",NAME(s2),NAME(d));break;
+      printf("rotlw     %s,%s",NAME(s2),NAME(d));break;
     case ROTATER_CO:
-      printf("rotrw	%s,%s",NAME(s2),NAME(d));break;
+      printf("rotrw     %s,%s",NAME(s2),NAME(d));break;
     case MUL:
-      printf("mulw	%s,%s",NAME(s2),NAME(d));break;
+      printf("mulw      %s,%s",NAME(s2),NAME(d));break;
 #elif ALPHA
     case COPY:
       if (IMMEDIATE_P(s1))
-	printf("lda	%s,%s",NAME(d),NAME(s1)); /* yes, reversed op order */
+        printf("lda     %s,%s",NAME(d),NAME(s1)); /* yes, reversed op order */
       else
-	printf("bis	%s,%s,%s",NAME(s1),NAME(s1),NAME(d));
+        printf("bis     %s,%s,%s",NAME(s1),NAME(s1),NAME(d));
       break;
     case ADD:
       if (IMMEDIATE_P(s2) && (signed_word) IMMEDIATE_VAL(s2) < 0)
-	/* Cast value to int since we cannot portably print a 64 bit type.  */
-	printf("subq	%s,%d,%s",NAME(s1),(int) -IMMEDIATE_VAL(s2),NAME(d));
+        /* Cast value to int since we cannot portably print a 64 bit type.  */
+        printf("subq    %s,%d,%s",NAME(s1),(int) -IMMEDIATE_VAL(s2),NAME(d));
       else
-	printf("addq	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addq    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
-	printf("ornot	$31,%s,%s",NAME(s2),NAME(d));
+        printf("ornot   $31,%s,%s",NAME(s2),NAME(d));
       else
-	printf("subq	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("subq    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
-    case AND:	printf("and	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case IOR:	printf("bis	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case XOR:	printf("xor	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case ANDC:	printf("bic	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case IORC:	printf("ornot	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case EQV:	printf("eqv	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case LSHIFTR:printf("srl	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case ASHIFTR:printf("sra	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case SHIFTL:printf("sll	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMPEQ:	printf("cmpeq	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMPLE:	printf("cmple	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMPLEU:printf("cmpule	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMPLT:	printf("cmplt	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMPLTU:printf("cmpult	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMOVEQ:printf("cmoveq	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMOVNE:printf("cmovne	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMOVLT:printf("cmovlt	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMOVGE:printf("cmovge	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMOVLE:printf("cmovle	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
-    case CMOVGT:printf("cmovgt	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case AND:   printf("and     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case IOR:   printf("bis     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case XOR:   printf("xor     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case ANDC:  printf("bic     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case IORC:  printf("ornot   %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case EQV:   printf("eqv     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case LSHIFTR:printf("srl    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case ASHIFTR:printf("sra    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case SHIFTL:printf("sll     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMPEQ: printf("cmpeq   %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMPLE: printf("cmple   %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMPLEU:printf("cmpule  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMPLT: printf("cmplt   %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMPLTU:printf("cmpult  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMOVEQ:printf("cmoveq  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMOVNE:printf("cmovne  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMOVLT:printf("cmovlt  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMOVGE:printf("cmovge  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMOVLE:printf("cmovle  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+    case CMOVGT:printf("cmovgt  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
 #elif HPPA
     case ADD_CIO:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb            %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO:
-      printf("subb		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb              %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO:
       if (IMMEDIATE_P(s2))
-	printf("addi		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi            %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO:
       if (IMMEDIATE_P(s1))
-	printf("subi		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi            %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD:
       if (IMMEDIATE_P(s2))
-	printf("ldo		%d(%s),%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("ldo             %d(%s),%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("addl		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADDCMPL:
-      printf("uaddcm		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("uaddcm            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND:
       if (IMMEDIATE_P(s2))
-	printf("extru		%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru           %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR:
-      printf("or		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or                %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR:
-      printf("xor		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor               %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC:
-      printf("andcm		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB:
-      printf("andcm		%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm             %%r0,%s,%s",NAME(s2),NAME(d));
       break;
     case LSHIFTR:
-      printf("extru		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru             %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR:
-      printf("extrs		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs             %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL:
-      printf("zdep		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep              %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL:
-      printf("shd		%s,%s,%d,%s",NAME(s1),NAME(s1),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("shd               %s,%s,%d,%s",NAME(s1),NAME(s1),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case EXTS1:
       if (!IMMEDIATE_P(s2))
-	abort();
-      printf("extrs		%s,%d,1,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
+        abort();
+      printf("extrs             %s,%d,1,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case EXTU1:
       if (!IMMEDIATE_P(s2))
-	abort();
-      printf("extru		%s,%d,1,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
+        abort();
+      printf("extru             %s,%d,1,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case EXTS2:
       if (!IMMEDIATE_P(s2))
-	abort();
-      printf("extrs		%s,%d,2,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
+        abort();
+      printf("extrs             %s,%d,2,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case EXTU2:
       if (!IMMEDIATE_P(s2))
-	abort();
-      printf("extru		%s,%d,2,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
+        abort();
+      printf("extru             %s,%d,2,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case COPY:
       if (IMMEDIATE_P(s1))
-	{
-	  if (IMMEDIATE_VAL(s1) + 0x2000 < 0x4000)
-	    printf("ldi		%d,%s",IMMEDIATE_VAL(s1),NAME(d));
-	  else if ((IMMEDIATE_VAL(s1) & 0x7ff) == 0)
-	    printf("ldil		l'0x%x,%s",IMMEDIATE_VAL(s1),NAME(d));
-	  else if (IMMEDIATE_VAL(s1) == 0x7fffffff)
-	    printf("zdepi		-1,31,31,%s",NAME(d));
-	  else
-	    abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s1) + 0x2000 < 0x4000)
+            printf("ldi         %d,%s",IMMEDIATE_VAL(s1),NAME(d));
+          else if ((IMMEDIATE_VAL(s1) & 0x7ff) == 0)
+            printf("ldil                l'0x%x,%s",IMMEDIATE_VAL(s1),NAME(d));
+          else if (IMMEDIATE_VAL(s1) == 0x7fffffff)
+            printf("zdepi               -1,31,31,%s",NAME(d));
+          else
+            abort();
+        }
       else
-	printf("copy		%s,%s",NAME(s1),NAME(d));
+        printf("copy            %s,%s",NAME(s1),NAME(d));
       break;
     case ADD_CIO_SEQ:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,=		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,=          %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,=          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SEQ:
-      printf("subb,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,=            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SEQ:
       if (IMMEDIATE_P(s2))
-	printf("addi,=		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,=          %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,=           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SEQ:
       if (IMMEDIATE_P(s1))
-	printf("subi,=		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,=          %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,=           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SEQ:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,=          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SEQ:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,=	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,=       %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,=        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_SEQ:
       if (IMMEDIATE_P(s2))
-	printf("extru,=		%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,=         %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,=           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_SEQ:
-      printf("or,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,=              %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_SEQ:
-      printf("xor,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,=             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_SEQ:
-      printf("andcm,=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,=           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_SEQ:
-      printf("andcm,=		%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,=           %%r0,%s,%s",NAME(s2),NAME(d));
       break;
 #if LATER
     case LSHIFTR_SEQ:
-      printf("extru,=		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,=           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_SEQ:
-      printf("extrs,=		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,=           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_SEQ:
-      printf("zdep,=		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,=            %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_SEQ:
     case EXTS1_SEQ:
@@ -1359,64 +1359,64 @@ output_assembly(insn_t insn)
 
     case ADD_CIO_SNE:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,<>		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,<>         %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,<>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,<>         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SNE:
-      printf("subb,<>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,<>           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SNE:
       if (IMMEDIATE_P(s2))
-	printf("addi,<>		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,<>         %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,<>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,<>          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SNE:
       if (IMMEDIATE_P(s1))
-	printf("subi,<>		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,<>         %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,<>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,<>          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SNE:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,<>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,<>         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SNE:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,<>	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,<>      %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,<>	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,<>       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_SNE:
       if (IMMEDIATE_P(s2))
-	printf("extru,<>	%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,<>        %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,<>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,<>          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_SNE:
-      printf("or,<>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,<>             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_SNE:
-      printf("xor,<>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,<>            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_SNE:
-      printf("andcm,<>	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,<>  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_SNE:
-      printf("andcm,<>	%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,<>  %%r0,%s,%s",NAME(s2),NAME(d));
       break;
 #if LATER
     case LSHIFTR_SNE:
-      printf("extru,<>	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,<>  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_SNE:
-      printf("extrs,<>	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,<>  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_SNE:
-      printf("zdep,<>		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,<>           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_SNE:
     case EXTS1_SNE:
@@ -1431,65 +1431,65 @@ output_assembly(insn_t insn)
 #if LATER
     case ADD_CIO_SLTS:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,<		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,<          %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,<          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SLTS:
-      printf("subb,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,<            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SLTS:
       if (IMMEDIATE_P(s2))
-	printf("addi,<		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,<          %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,<           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SLTS:
       if (IMMEDIATE_P(s1))
-	printf("subi,<		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,<          %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,<           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 #endif
     case ADD_SLTS:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,<          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SLTS:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,<	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,<       %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,<	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,<        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_SLTS:
       if (IMMEDIATE_P(s2))
-	printf("extru,<		%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,<         %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,<           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_SLTS:
-      printf("or,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,<              %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_SLTS:
-      printf("xor,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,<             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_SLTS:
-      printf("andcm,<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,<           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_SLTS:
-      printf("andcm,<		%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,<           %%r0,%s,%s",NAME(s2),NAME(d));
       break;
 #if LATER
     case LSHIFTR_SLTS:
-      printf("extru,<		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,<           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_SLTS:
-      printf("extrs,<		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,<           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_SLTS:
-      printf("zdep,<		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,<            %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_SLTS:
     case EXTS1_SLTS:
@@ -1504,65 +1504,65 @@ output_assembly(insn_t insn)
 #if LATER
     case ADD_CIO_SGES:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,>=		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,>=         %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,>=         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SGES:
-      printf("subb,>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,>=           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SGES:
       if (IMMEDIATE_P(s2))
-	printf("addi,>=		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,>=         %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,>=          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SGES:
       if (IMMEDIATE_P(s1))
-	printf("subi,>=		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,>=         %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,>=          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 #endif
     case ADD_SGES:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,>=         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SGES:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,>=	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,>=      %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,>=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,>=       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_SGES:
       if (IMMEDIATE_P(s2))
-	printf("extru,>=	%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,>=        %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,>=          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_SGES:
-      printf("or,>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,>=             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_SGES:
-      printf("xor,>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,>=            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_SGES:
-      printf("andcm,>=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,>=  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_SGES:
-      printf("andcm,>=	%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,>=  %%r0,%s,%s",NAME(s2),NAME(d));
       break;
 #if LATER
     case LSHIFTR_SGES:
-      printf("extru,>=	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,>=  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_SGES:
-      printf("extrs,>=	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,>=  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_SGES:
-      printf("zdep,>=		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,>=           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_SGES:
     case EXTS1_SGES:
@@ -1577,65 +1577,65 @@ output_assembly(insn_t insn)
 #if LATER
     case ADD_CIO_SLES:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,<=		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,<=         %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,<=         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SLES:
-      printf("subb,<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,<=           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SLES:
       if (IMMEDIATE_P(s2))
-	printf("addi,<=		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,<=         %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,<=          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SLES:
       if (IMMEDIATE_P(s1))
-	printf("subi,<=		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,<=         %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,<=          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 #endif
     case ADD_SLES:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,<=         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SLES:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,<=	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,<=      %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,<=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,<=       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_SLES:
       if (IMMEDIATE_P(s2))
-	printf("extru,<=	%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,<=        %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,<=          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_SLES:
-      printf("or,<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,<=             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_SLES:
-      printf("xor,<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,<=            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_SLES:
-      printf("andcm,<=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,<=  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_SLES:
-      printf("andcm,<=	%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,<=  %%r0,%s,%s",NAME(s2),NAME(d));
       break;
 #if LATER
     case LSHIFTR_SLES:
-      printf("extru,<=	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,<=  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_SLES:
-      printf("extrs,<=	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,<=  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_SLES:
-      printf("zdep,<=		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,<=           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_SLES:
     case EXTS1_SLES:
@@ -1650,65 +1650,65 @@ output_assembly(insn_t insn)
 #if LATER
     case ADD_CIO_SGTS:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,>		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,>          %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,>          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SGTS:
-      printf("subb,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,>            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SGTS:
       if (IMMEDIATE_P(s2))
-	printf("addi,>		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,>          %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,>           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SGTS:
       if (IMMEDIATE_P(s1))
-	printf("subi,>		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,>          %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,>           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 #endif
     case ADD_SGTS:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,>          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SGTS:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,>	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,>       %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,>	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,>        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_SGTS:
       if (IMMEDIATE_P(s2))
-	printf("extru,>		%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,>         %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,>           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_SGTS:
-      printf("or,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,>              %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_SGTS:
-      printf("xor,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,>             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_SGTS:
-      printf("andcm,>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,>           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_SGTS:
-      printf("andcm,>		%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,>           %%r0,%s,%s",NAME(s2),NAME(d));
       break;
 #if LATER
     case LSHIFTR_SGTS:
-      printf("extru,>		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,>           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_SGTS:
-      printf("extrs,>		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,>           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_SGTS:
-      printf("zdep,>		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,>            %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_SGTS:
     case EXTS1_SGTS:
@@ -1722,200 +1722,200 @@ output_assembly(insn_t insn)
 
     case ADD_CIO_SLTU:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,<<		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,<<         %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,nuv	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,nuv        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SLTU:
-      printf("subb,<<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,<<           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SLTU:
       if (IMMEDIATE_P(s2))
-	printf("addi,nuv	%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,nuv        %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,nuv		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,nuv         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SLTU:
       if (IMMEDIATE_P(s1))
-	printf("subi,<<		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,<<         %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,<<		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,<<          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SLTU:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,nuv	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,nuv        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SLTU:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,<<	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,<<      %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,<<	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,<<       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 
     case ADD_CIO_SGEU:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,>>=	%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,>>=        %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,uv		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,uv         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SGEU:
-      printf("subb,>>=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,>>=  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SGEU:
       if (IMMEDIATE_P(s2))
-	printf("addi,uv		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,uv         %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,uv		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,uv          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SGEU:
       if (IMMEDIATE_P(s1))
-	printf("subi,>>=	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,>>=        %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,>>=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,>>=         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SGEU:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,uv		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,uv         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SGEU:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,>>=	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,>>=     %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,>>=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,>>=      %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 
     case ADD_CIO_SLEU:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,<<=	%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,<<=        %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,znv	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,znv        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SLEU:
-      printf("subb,<<=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,<<=  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SLEU:
       if (IMMEDIATE_P(s2))
-	printf("addi,znv	%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,znv        %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,znv		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,znv         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SLEU:
       if (IMMEDIATE_P(s1))
-	printf("subi,<<=	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,<<=        %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,<<=		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,<<=         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SLEU:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,znv	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,znv        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SLEU:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,<<=	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,<<=     %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,<<=	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,<<=      %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 
     case ADD_CIO_SGTU:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,>>		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,>>         %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,vnz	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,vnz        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SGTU:
-      printf("subb,>>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,>>           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SGTU:
       if (IMMEDIATE_P(s2))
-	printf("addi,vnz	%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,vnz        %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,vnz		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,vnz         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SGTU:
       if (IMMEDIATE_P(s1))
-	printf("subi,>>		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,>>         %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,>>		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,>>          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SGTU:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,vnz	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,vnz        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SGTU:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,>>	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,>>      %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,>>	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,>>       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 
     case ADD_CIO_SODD:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,od		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,od         %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,od		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,od         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SODD:
-      printf("subb,od		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,od           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SODD:
       if (IMMEDIATE_P(s2))
-	printf("addi,od		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,od         %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,od		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,od          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SODD:
       if (IMMEDIATE_P(s1))
-	printf("subi,od		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,od         %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,od		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,od          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SODD:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,od		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,od         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SODD:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,od	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,od      %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,od	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,od       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_SODD:
       if (IMMEDIATE_P(s2))
-	printf("extru,od	%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,od        %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,od		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,od          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_SODD:
-      printf("or,od		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,od             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_SODD:
-      printf("xor,od		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,od            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_SODD:
-      printf("andcm,od	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,od  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_SODD:
-      printf("andcm,od	%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,od  %%r0,%s,%s",NAME(s2),NAME(d));
       break;
 #if LATER
     case LSHIFTR_SODD:
-      printf("extru,od	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,od  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_SODD:
-      printf("extrs,od	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,od  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_SODD:
-      printf("zdep,od		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,od           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_SODD:
     case EXTS1_SODD:
@@ -1929,64 +1929,64 @@ output_assembly(insn_t insn)
 
     case ADD_CIO_SEVN:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,ev		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,ev         %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,ev		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,ev         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_SEVN:
-      printf("subb,ev		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,ev           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_SEVN:
       if (IMMEDIATE_P(s2))
-	printf("addi,ev		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,ev         %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,ev		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,ev          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_SEVN:
       if (IMMEDIATE_P(s1))
-	printf("subi,ev		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,ev         %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,ev		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,ev          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SEVN:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,ev		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,ev         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case COMCLR_SEVN:
       if (IMMEDIATE_P(s1))
-	printf("comiclr,ev	%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("comiclr,ev      %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("comclr,ev	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("comclr,ev       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_SEVN:
       if (IMMEDIATE_P(s2))
-	printf("extru,ev	%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,ev        %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,ev		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,ev          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_SEVN:
-      printf("or,ev		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,ev             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_SEVN:
-      printf("xor,ev		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,ev            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_SEVN:
-      printf("andcm,ev	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,ev  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_SEVN:
-      printf("andcm,ev	%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,ev  %%r0,%s,%s",NAME(s2),NAME(d));
       break;
 #if LATER
     case LSHIFTR_SEVN:
-      printf("extru,ev	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,ev  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_SEVN:
-      printf("extrs,ev	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,ev  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_SEVN:
-      printf("zdep,ev		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,ev           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_SEVN:
     case EXTS1_SEVN:
@@ -2000,471 +2000,471 @@ output_assembly(insn_t insn)
 
     case ADD_SOVS:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,sv		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,sv         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_SNVS:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,nsv	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,nsv        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
 
     case ADD_CIO_S:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
-	printf("subb,tr		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("subb,tr         %s,%%r0,%s",NAME(s1),NAME(d));
       else
-	printf("addc,tr		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc,tr         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CIO_S:
-      printf("subb,tr		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("subb,tr           %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_CO_S:
       if (IMMEDIATE_P(s2))
-	printf("addi,tr		%d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("addi,tr         %d,%s,%s",IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("add,tr		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("add,tr          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADC_CO_S:
       if (IMMEDIATE_P(s1))
-	printf("subi,tr		%d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
+        printf("subi,tr         %d,%s,%s",IMMEDIATE_VAL(s1),NAME(s2),NAME(d));
       else
-	printf("sub,tr		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("sub,tr          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ADD_S:
       if (IMMEDIATE_P(s2))
-	abort();
+        abort();
       else
-	printf("addl,tr		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addl,tr         %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case AND_S:
       if (IMMEDIATE_P(s2))
-	printf("extru,tr	%s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
+        printf("extru,tr        %s,31,%d,%s",NAME(s1),ffs_internal(IMMEDIATE_VAL(s2) + 1) - 1,NAME(d));
       else
-	printf("and,tr		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("and,tr          %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case IOR_S:
-      printf("or,tr		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("or,tr             %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case XOR_S:
-      printf("xor,tr		%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("xor,tr            %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case ANDC_S:
-      printf("andcm,tr	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+      printf("andcm,tr  %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB_S:
-      printf("andcm,tr	%%r0,%s,%s",NAME(s2),NAME(d));
+      printf("andcm,tr  %%r0,%s,%s",NAME(s2),NAME(d));
       break;
     case LSHIFTR_S:
-      printf("extru,tr	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extru,tr  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ASHIFTR_S:
-      printf("extrs,tr	%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("extrs,tr  %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case SHIFTL_S:
-      printf("zdep,tr		%s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("zdep,tr           %s,%d,%d,%s",NAME(s1),31-IMMEDIATE_VAL(s2),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case ROTATEL_S:
-      printf("shd,tr		%s,%s,%d,%s",NAME(s1),NAME(s1),32-IMMEDIATE_VAL(s2),NAME(d));
+      printf("shd,tr            %s,%s,%d,%s",NAME(s1),NAME(s1),32-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case EXTS1_S:
       if (!IMMEDIATE_P(s2))
-	abort();
-      printf("extrs,tr	%s,%d,1,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
+        abort();
+      printf("extrs,tr  %s,%d,1,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case EXTU1_S:
       if (!IMMEDIATE_P(s2))
-	abort();
-      printf("extru,tr	%s,%d,1,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
+        abort();
+      printf("extru,tr  %s,%d,1,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case EXTS2_S:
       if (!IMMEDIATE_P(s2))
-	abort();
-      printf("extrs,tr	%s,%d,2,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
+        abort();
+      printf("extrs,tr  %s,%d,2,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case EXTU2_S:
       if (!IMMEDIATE_P(s2))
-	abort();
-      printf("extru,tr	%s,%d,2,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
+        abort();
+      printf("extru,tr  %s,%d,2,%s",NAME(s1),31-IMMEDIATE_VAL(s2),NAME(d));
       break;
     case COPY_S:
       if (IMMEDIATE_P(s1))
-	{
-	  if (IMMEDIATE_VAL(s1) + 0x400 < 0x800)
-	    printf("addi,tr		%d,%%r0,%s",IMMEDIATE_VAL(s1),NAME(d));
-	  else if (IMMEDIATE_VAL(s1) == 0x7fffffff)
-	    printf("zdepi,tr	-1,31,31,%s",NAME(d));
-	  else if (IMMEDIATE_VAL(s1) == 0x80000000)
-	    printf("zdepi,tr	1,0,1,%s",NAME(d));
-	  else
-	    abort();
-	}
+        {
+          if (IMMEDIATE_VAL(s1) + 0x400 < 0x800)
+            printf("addi,tr             %d,%%r0,%s",IMMEDIATE_VAL(s1),NAME(d));
+          else if (IMMEDIATE_VAL(s1) == 0x7fffffff)
+            printf("zdepi,tr    -1,31,31,%s",NAME(d));
+          else if (IMMEDIATE_VAL(s1) == 0x80000000)
+            printf("zdepi,tr    1,0,1,%s",NAME(d));
+          else
+            abort();
+        }
       else
-	printf("addl,tr		%s,%%r0,%s",NAME(s1),NAME(d));
+        printf("addl,tr         %s,%%r0,%s",NAME(s1),NAME(d));
       break;
 #elif SH
     case COPY:
-      printf("mov	%s,%s",NAME(s1),NAME(d));break;
+      printf("mov       %s,%s",NAME(s1),NAME(d));break;
     case ADD:
-      printf("add	%s,%s",NAME(s2),NAME(d));break;
+      printf("add       %s,%s",NAME(s2),NAME(d));break;
     case ADD_CI:
-      printf("movt	%s",NAME(d));break;
+      printf("movt      %s",NAME(d));break;
     case ADD_CIO:
-      printf("addc	%s,%s",NAME(s2),NAME(d));break;
+      printf("addc      %s,%s",NAME(s2),NAME(d));break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == 0)
-	printf("neg	%s,%s",NAME(s2),NAME(d));
+        printf("neg     %s,%s",NAME(s2),NAME(d));
       else
-	printf("sub	%s,%s",NAME(s2),NAME(d));
+        printf("sub     %s,%s",NAME(s2),NAME(d));
       break;
     case SUB_CIO:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == 0)
-	printf("negc	%s,%s",NAME(s2),NAME(d));
+        printf("negc    %s,%s",NAME(s2),NAME(d));
       else
-	printf("subc	%s,%s",NAME(s2),NAME(d));
+        printf("subc    %s,%s",NAME(s2),NAME(d));
       break;
     case AND:
       if (IMMEDIATE_P(s2))
-	{
-	  if (IMMEDIATE_VAL(s2) == 0xff)
-	    printf("extu.b	%s,%s",NAME(s1),NAME(d));
-	  else if (IMMEDIATE_VAL(s2) == 0xffff)
-	    printf("extu.w	%s,%s",NAME(s1),NAME(d));
-	  else
-	    printf("and	%s,%s	! reallocate %s in r0",NAME(s2),NAME(d),NAME(d));
-	  break;
-	}
-      printf("and	%s,%s",NAME(s2),NAME(d));
+        {
+          if (IMMEDIATE_VAL(s2) == 0xff)
+            printf("extu.b      %s,%s",NAME(s1),NAME(d));
+          else if (IMMEDIATE_VAL(s2) == 0xffff)
+            printf("extu.w      %s,%s",NAME(s1),NAME(d));
+          else
+            printf("and %s,%s   ! reallocate %s in r0",NAME(s2),NAME(d),NAME(d));
+          break;
+        }
+      printf("and       %s,%s",NAME(s2),NAME(d));
       break;
     case IOR:
       if (IMMEDIATE_P(s2))
-	{
-	  printf("or	%s,%s	! reallocate %s in r0",NAME(s2),NAME(d),NAME(d));
-	  break;
-	}
-      printf("or	%s,%s",NAME(s2),NAME(d));break;
+        {
+          printf("or    %s,%s   ! reallocate %s in r0",NAME(s2),NAME(d),NAME(d));
+          break;
+        }
+      printf("or        %s,%s",NAME(s2),NAME(d));break;
     case XOR:
       if (IMMEDIATE_P(s2))
-	{
-	  printf("xor	%s,%s	! reallocate %s in r0",NAME(s2),NAME(d),NAME(d));
-	  break;
-	}
-      printf("xor	%s,%s",NAME(s2),NAME(d));break;
+        {
+          printf("xor   %s,%s   ! reallocate %s in r0",NAME(s2),NAME(d),NAME(d));
+          break;
+        }
+      printf("xor       %s,%s",NAME(s2),NAME(d));break;
     case SHIFTL_CO:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
-	printf("shll	%s",NAME(d));
+        printf("shll    %s",NAME(d));
       else abort();
       break;
     case SHIFTL:
       if (IMMEDIATE_P(s2)
-	  && (IMMEDIATE_VAL(s2) == 2 || IMMEDIATE_VAL(s2) == 8 || IMMEDIATE_VAL(s2) == 16))
-	printf("shll%d	%s",IMMEDIATE_VAL(s2),NAME(d));
+          && (IMMEDIATE_VAL(s2) == 2 || IMMEDIATE_VAL(s2) == 8 || IMMEDIATE_VAL(s2) == 16))
+        printf("shll%d  %s",IMMEDIATE_VAL(s2),NAME(d));
       else abort();
       break;
 
     case LSHIFTR_CO:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
-	printf("shlr	%s",NAME(d));
+        printf("shlr    %s",NAME(d));
       else abort();
       break;
     case LSHIFTR:
       if (IMMEDIATE_P(s2)
-	  && (IMMEDIATE_VAL(s2) == 2 || IMMEDIATE_VAL(s2) == 8 || IMMEDIATE_VAL(s2) == 16))
-	printf("shlr%d	%s",IMMEDIATE_VAL(s2),NAME(d));
+          && (IMMEDIATE_VAL(s2) == 2 || IMMEDIATE_VAL(s2) == 8 || IMMEDIATE_VAL(s2) == 16))
+        printf("shlr%d  %s",IMMEDIATE_VAL(s2),NAME(d));
       else abort();
       break;
 
     case ASHIFTR_CO:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
-	printf("shar	%s",NAME(d));
+        printf("shar    %s",NAME(d));
       else abort();
       break;
     case ROTATEL_CO:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
-	printf("rotl	%s",NAME(d));
+        printf("rotl    %s",NAME(d));
       else abort();
       break;
     case ROTATEL:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 16)
-	printf("swap.w	%s,%s",NAME(s1),NAME(d));
+        printf("swap.w  %s,%s",NAME(s1),NAME(d));
       else abort();
       break;
     case MERGE16:
-      printf("xtrct	%s,%s",NAME(s2),NAME(d));
+      printf("xtrct     %s,%s",NAME(s2),NAME(d));
       break;
     case ROTATEXL_CIO:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
-	printf("rotcl	%s",NAME(d));
+        printf("rotcl   %s",NAME(d));
       else abort();
       break;
     case ROTATER_CO:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
-	printf("rotr	%s",NAME(d));
+        printf("rotr    %s",NAME(d));
       else abort();
       break;
     case ROTATEXR_CIO:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
-	printf("rotcr	%s",NAME(d));
+        printf("rotcr   %s",NAME(d));
       else abort();
       break;
     case CYEQ:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 0)
-	printf("tst	%s,%s",NAME(s1),NAME(s1));
+        printf("tst     %s,%s",NAME(s1),NAME(s1));
       else
-	printf("cmp/eq	%s,%s",NAME(s2),NAME(s1));
+        printf("cmp/eq  %s,%s",NAME(s2),NAME(s1));
       break;
     case CYGTS:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 0)
-	printf("cmp/pl	%s",NAME(s1));
+        printf("cmp/pl  %s",NAME(s1));
       else
-	printf("cmp/gt	%s,%s",NAME(s2),NAME(s1));
+        printf("cmp/gt  %s,%s",NAME(s2),NAME(s1));
       break;
     case CYGES:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 0)
-	printf("cmp/pz	%s",NAME(s1));
+        printf("cmp/pz  %s",NAME(s1));
       else
-	printf("cmp/ge	%s,%s",NAME(s2),NAME(s1));
+        printf("cmp/ge  %s,%s",NAME(s2),NAME(s1));
       break;
     case CYGTU:
-      printf("cmp/hi	%s,%s",NAME(s2),NAME(s1));break;
+      printf("cmp/hi    %s,%s",NAME(s2),NAME(s1));break;
     case CYGEU:
-      printf("cmp/hs	%s,%s",NAME(s2),NAME(s1));break;
+      printf("cmp/hs    %s,%s",NAME(s2),NAME(s1));break;
     case CYAND:
       if (IMMEDIATE_P(s2))
-	printf("tst	%s,%s	! reallocate %s in r0",NAME(s2),NAME(s1),NAME(s1));
+        printf("tst     %s,%s   ! reallocate %s in r0",NAME(s2),NAME(s1),NAME(s1));
       else
-	printf("tst	%s,%s",NAME(s2),NAME(s1));
+        printf("tst     %s,%s",NAME(s2),NAME(s1));
       break;
     case SETCY:
       printf("sett");break;
     case CLRCY:
       printf("clrt");break;
     case EXTS8:
-      printf("exts.b	%s,%s",NAME(s1),NAME(d));break;
+      printf("exts.b    %s,%s",NAME(s1),NAME(d));break;
     case EXTS16:
-      printf("exts.w	%s,%s",NAME(s1),NAME(d));break;
+      printf("exts.w    %s,%s",NAME(s1),NAME(d));break;
     case DECR_CYEQ:
-      printf("dt	%s",NAME(d));break;
+      printf("dt        %s",NAME(d));break;
 #elif I960
     case ADD:
       if (IMMEDIATE_P(s2) && (signed_word) IMMEDIATE_VAL(s2) < 0)
-	printf("subo	%d,%s,%s",-IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("subo    %d,%s,%s",-IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("addo	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addo    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
-	printf("not	%s,%s",NAME(s2),NAME(d));
+        printf("not     %s,%s",NAME(s2),NAME(d));
       else
-	printf("subo	%s,%s,%s",NAME(s2),NAME(s1),NAME(d));
+        printf("subo    %s,%s,%s",NAME(s2),NAME(s1),NAME(d));
       break;
     case COPY:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) >= 32)
-	{
-	  word x = IMMEDIATE_VAL(s1);
-	  if ((x & (x - 1)) == 0)
-	    {
-	      printf("setbit	%d,1,%s",floor_log2(x),NAME(d));
-	      break;
-	    }
-	  if (-x < 32)
-	    {
-	      printf("sub	%d,%s",-x,NAME(d));
-	      break;
-	    }
-	  abort();
-	}
-      printf("mov	%s,%s",NAME(s1),NAME(d));break;
+        {
+          word x = IMMEDIATE_VAL(s1);
+          if ((x & (x - 1)) == 0)
+            {
+              printf("setbit    %d,1,%s",floor_log2(x),NAME(d));
+              break;
+            }
+          if (-x < 32)
+            {
+              printf("sub       %d,%s",-x,NAME(d));
+              break;
+            }
+          abort();
+        }
+      printf("mov       %s,%s",NAME(s1),NAME(d));break;
     case AND:
-      printf("and	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+      printf("and       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case IOR:
-      printf("or	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+      printf("or        %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case IORC:
-      printf("notor	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+      printf("notor     %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case XOR:
-      printf("xor	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+      printf("xor       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case ANDC:
-      printf("notand	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+      printf("notand    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case EQV:
-      printf("xnor	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+      printf("xnor      %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case NAND:
-      printf("nand	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+      printf("nand      %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case NOR:
-      printf("nor	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
+      printf("nor       %s,%s,%s",NAME(s1),NAME(s2),NAME(d));break;
     case LSHIFTR:
-      printf("shro	%s,%s,%s",NAME(s2),NAME(s1),NAME(d));break;
+      printf("shro      %s,%s,%s",NAME(s2),NAME(s1),NAME(d));break;
     case ASHIFTR:
-      printf("shri	%s,%s,%s",NAME(s2),NAME(s1),NAME(d));break;
+      printf("shri      %s,%s,%s",NAME(s2),NAME(s1),NAME(d));break;
     case SHIFTL:
-      printf("shlo	%s,%s,%s",NAME(s2),NAME(s1),NAME(d));break;
+      printf("shlo      %s,%s,%s",NAME(s2),NAME(s1),NAME(d));break;
     case ROTATEL:
-      printf("rotate	%s,%s,%s",NAME(s2),NAME(s1),NAME(d));break;
+      printf("rotate    %s,%s,%s",NAME(s2),NAME(s1),NAME(d));break;
     case ADDC_960:
       if (IMMEDIATE_P(s2) && (signed_word) IMMEDIATE_VAL(s2) < 0)
-	printf("subc	%d,%s,%s",-IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
+        printf("subc    %d,%s,%s",-IMMEDIATE_VAL(s2),NAME(s1),NAME(d));
       else
-	printf("addc	%s,%s,%s",NAME(s1),NAME(s2),NAME(d));
+        printf("addc    %s,%s,%s",NAME(s1),NAME(s2),NAME(d));
       break;
     case SUBC_960:
-      printf("subc	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("subc      %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SEL_NO_960:
-      printf("selno	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("selno     %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case SEL_G_960:
-      printf("selg	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("selg      %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case SEL_E_960:
-      printf("sele	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("sele      %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case SEL_GE_960:
-      printf("selge	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("selge     %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case SEL_L_960:
-      printf("sell	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("sell      %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case SEL_NE_960:
-      printf("selne	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("selne     %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case SEL_LE_960:
-      printf("selle	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("selle     %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case SEL_O_960:
-      printf("selo	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("selo      %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case CONCMPO_960:
-      printf("concmpo	%s,%s",NAME(s1),NAME(s2)); break;
+      printf("concmpo   %s,%s",NAME(s1),NAME(s2)); break;
     case CONCMPI_960:
-      printf("concmpi	%s,%s",NAME(s1),NAME(s2)); break;
+      printf("concmpi   %s,%s",NAME(s1),NAME(s2)); break;
     case CMPO_960:
-      printf("cmpo	%s,%s",NAME(s1),NAME(s2)); break;
+      printf("cmpo      %s,%s",NAME(s1),NAME(s2)); break;
     case CMPI_960:
-      printf("cmpi	%s,%s",NAME(s1),NAME(s2)); break;
+      printf("cmpi      %s,%s",NAME(s1),NAME(s2)); break;
     case SHIFTL_NT:
-      printf("shlo	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("shlo      %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case LSHIFTR_NT:
-      printf("shro	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("shro      %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case ASHIFTR_NT:
-      printf("shri	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("shri      %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case ADDO_NO_960:
-      printf("addono	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("addono    %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case ADDO_G_960:
-      printf("addog	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("addog     %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case ADDO_E_960:
-      printf("addoe	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("addoe     %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case ADDO_GE_960:
-      printf("addoge	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("addoge    %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case ADDO_L_960:
-      printf("addol	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("addol     %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case ADDO_NE_960:
-      printf("addone	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("addone    %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case ADDO_LE_960:
-      printf("addole	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("addole    %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case ADDO_O_960:
-      printf("addoo	%s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
+      printf("addoo     %s,%s,%s",NAME(s1),NAME(s2),NAME(d)); break;
     case SUBO_NO_960:
-      printf("subono	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("subono    %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SUBO_G_960:
-      printf("subog	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("subog     %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SUBO_E_960:
-      printf("suboe	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("suboe     %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SUBO_GE_960:
-      printf("suboge	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("suboge    %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SUBO_L_960:
-      printf("subol	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("subol     %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SUBO_NE_960:
-      printf("subone	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("subone    %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SUBO_LE_960:
-      printf("subole	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("subole    %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SUBO_O_960:
-      printf("suboo	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("suboo     %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case ALTERBIT:
-      printf("alterbit	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("alterbit  %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case SETBIT:
-      printf("setbit	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("setbit    %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case CLRBIT:
-      printf("clrbit	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("clrbit    %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
     case CHKBIT:
-      printf("chkbit	%s,%s",NAME(s2),NAME(s1)); break;
+      printf("chkbit    %s,%s",NAME(s2),NAME(s1)); break;
     case NOTBIT:
-      printf("notbit	%s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
+      printf("notbit    %s,%s,%s",NAME(s2),NAME(s1),NAME(d)); break;
 #elif XCORE
     case ADD:
       if (IMMEDIATE_P(s2) && (signed_word) IMMEDIATE_VAL(s2) < 0)
-	printf("sub 	%s,%s,%d",NAME(d),NAME(s1),-IMMEDIATE_VAL(s2));
+        printf("sub     %s,%s,%d",NAME(d),NAME(s1),-IMMEDIATE_VAL(s2));
       else
-	printf("add	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("add     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case LDA16F:
-      printf("lda16	%s,%s[%s]",NAME(d),NAME(s1),NAME(s2));break;
+      printf("lda16     %s,%s[%s]",NAME(d),NAME(s1),NAME(s2));break;
     case LDA16B:
-      printf("lda16	%s,%s[-%s]",NAME(d),NAME(s1),NAME(s2));break;
+      printf("lda16     %s,%s[-%s]",NAME(d),NAME(s1),NAME(s2));break;
     case LDAWF:
-      printf("ldaw	%s,%s[%s]",NAME(d),NAME(s1),NAME(s2));break;
+      printf("ldaw      %s,%s[%s]",NAME(d),NAME(s1),NAME(s2));break;
     case LDAWB:
-      printf("ldaw	%s,%s[-%s]",NAME(d),NAME(s1),NAME(s2));break;
+      printf("ldaw      %s,%s[-%s]",NAME(d),NAME(s1),NAME(s2));break;
     case SUB:
       if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == 0)
-	printf("neg	%s,%s",NAME(d),NAME(s2));
+        printf("neg     %s,%s",NAME(d),NAME(s2));
       else if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
-	printf("not	%s,%s",NAME(d),NAME(s2));
+        printf("not     %s,%s",NAME(d),NAME(s2));
       else
-	printf("sub	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("sub     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case MUL:
-      printf("mul	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+      printf("mul       %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case AND:
       if (IMMEDIATE_P(s2))
-	{
-	  word x = IMMEDIATE_VAL(s2);
-	  if ((x & (x + 1)) == 0)
-	    printf("zext	%s,%d",NAME(s1), floor_log2(x + 1));
-	  else
-	    abort();
-	}
+        {
+          word x = IMMEDIATE_VAL(s2);
+          if ((x & (x + 1)) == 0)
+            printf("zext        %s,%d",NAME(s1), floor_log2(x + 1));
+          else
+            abort();
+        }
       else
-	printf("and	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("and     %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case ANDC:
-      printf("andnot	%s,%s",NAME(s1),NAME(s2));break;
+      printf("andnot    %s,%s",NAME(s1),NAME(s2));break;
     case IOR:
-      printf("or	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+      printf("or        %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case XOR:
-      printf("xor	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+      printf("xor       %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case SHIFTL_NT:
-      printf("shl	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+      printf("shl       %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case LSHIFTR_NT:
-      printf("shr	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+      printf("shr       %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case ASHIFTR_NT:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == (BITS_PER_WORD - 1))
-	printf("ashr	%s,%s,32",NAME(d),NAME(s1));
+        printf("ashr    %s,%s,32",NAME(d),NAME(s1));
       else
-	printf("ashr	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));
+        printf("ashr    %s,%s,%s",NAME(d),NAME(s1),NAME(s2));
       break;
     case CMPEQ:
-      printf("eq	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+      printf("eq        %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case CMPLT:
-      printf("lss	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+      printf("lss       %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case CMPLTU:
-      printf("lsu	%s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
+      printf("lsu       %s,%s,%s",NAME(d),NAME(s1),NAME(s2));break;
     case BITREV:
-      printf("bitrev	%s,%s",NAME(d),NAME(s1));break;
+      printf("bitrev    %s,%s",NAME(d),NAME(s1));break;
     case BYTEREV:
-      printf("byterev	%s,%s",NAME(d),NAME(s1));break;
+      printf("byterev   %s,%s",NAME(d),NAME(s1));break;
     case CLZ:
-      printf("clz	%s,%s",NAME(d),NAME(s1));break;
+      printf("clz       %s,%s",NAME(d),NAME(s1));break;
     case MKMSK:
-      printf("mkmsk	%s,%s",NAME(d),NAME(s1));break;
+      printf("mkmsk     %s,%s",NAME(d),NAME(s1));break;
     case ZEXT:
-      printf("zext	%s,%s",NAME(s1),NAME(s2));break;
+      printf("zext      %s,%s",NAME(s1),NAME(s2));break;
     case SEXT:
-      printf("sext	%s,%s",NAME(s1),NAME(s2));break;
+      printf("sext      %s,%s",NAME(s1),NAME(s2));break;
     case COPY:
       if (IMMEDIATE_P(s1))
-	{
+        {
           word x = IMMEDIATE_VAL(s1);
-	  if (x < 0x10000)
-	    printf("ldc	%s,%s",NAME(d),NAME(s1));
-	  else if (x == 0xffffffff)
-	    printf("mkmsk	%s,32",NAME(d));
+          if (x < 0x10000)
+            printf("ldc %s,%s",NAME(d),NAME(s1));
+          else if (x == 0xffffffff)
+            printf("mkmsk       %s,32",NAME(d));
           else if ((x & (x + 1)) == 0)
-	    printf("mkmsk	%s,%d",NAME(d), floor_log2(x + 1));
-	  else abort();
-	}
+            printf("mkmsk       %s,%d",NAME(d), floor_log2(x + 1));
+          else abort();
+        }
       else
-	printf("mov	%s,%s",NAME(d),NAME(s1));
+        printf("mov     %s,%s",NAME(d),NAME(s1));
       break;
 #else
 #error no assembly output code for this CPU
@@ -2521,10 +2521,10 @@ init_test_sets()
 
     if (n_words < j)
       {
-	test_sets = (n_words == 0
-		     ? (word *) xmalloc (sizeof (word) * j)
-		     : (word *) xrealloc (test_sets, sizeof (word) * j));
-	n_words = j;
+        test_sets = (n_words == 0
+                     ? (word *) xmalloc (sizeof (word) * j)
+                     : (word *) xrealloc (test_sets, sizeof (word) * j));
+        n_words = j;
       }
   }
 
@@ -2537,23 +2537,23 @@ init_test_sets()
   for (;;)
     {
       for (i = arity - 1; i >= 0; i--)
-	tvalues[i] = *test_set++ = test_operands[loop_vars[i]];
+        tvalues[i] = *test_set++ = test_operands[loop_vars[i]];
 
       /* Get the desired value for the current operand values.  */
       *test_set++ = (*eval)(tvalues);
       j++;
 
       /* General loop control.  This implements ARITY loops using induction
-	 variables in loop_vars[0] through loop_vars[ARITY - 1].  */
+         variables in loop_vars[0] through loop_vars[ARITY - 1].  */
       i = 0;
       loop_vars[i] = (loop_vars[i] + 1) % N_TEST_OPERANDS;
       while (loop_vars[i] == 0)
-	{
-	  i++;
-	  if (i >= arity)
-	    goto random;
-	  loop_vars[i] = (loop_vars[i] + 1) % N_TEST_OPERANDS;
-	}
+        {
+          i++;
+          if (i >= arity)
+            goto random;
+          loop_vars[i] = (loop_vars[i] + 1) % N_TEST_OPERANDS;
+        }
     }
 
   /* Now add the additional random test sets.  */
@@ -2561,7 +2561,7 @@ init_test_sets()
   for (i = N_RANDOM_TEST_OPERANDS - 1; i >= 0; i--)
     {
       for (pc = arity - 1; pc >= 0; pc--)
-	tvalues[pc] = *test_set++ = random_word();
+        tvalues[pc] = *test_set++ = random_word();
 
       *test_set++ = (*eval)(tvalues);
       j++;
@@ -2576,23 +2576,23 @@ print_operand (int op)
   if (IMMEDIATE_P(op))
     {
       if ((signed_word) IMMEDIATE_VAL(op) >= 10
-	  || (signed_word) IMMEDIATE_VAL(op) <= -10)
-	{
+          || (signed_word) IMMEDIATE_VAL(op) <= -10)
+        {
 #ifdef PSTR
-	  printf(PSTR, IMMEDIATE_VAL(op));
+          printf(PSTR, IMMEDIATE_VAL(op));
 #else
-	  word x = IMMEDIATE_VAL(op);
-	  if (x >> 32 != 0)
-	    {
-	      printf("0x%x", (unsigned int) (x >> 32));
-	      printf("%08x", (unsigned int) x);
-	    }
-	  else
-	    printf("0x%x", (unsigned int) x);
+          word x = IMMEDIATE_VAL(op);
+          if (x >> 32 != 0)
+            {
+              printf("0x%x", (unsigned int) (x >> 32));
+              printf("%08x", (unsigned int) x);
+            }
+          else
+            printf("0x%x", (unsigned int) x);
 #endif
-	}
+        }
       else
-	printf("%d", (int) IMMEDIATE_VAL(op));
+        printf("%d", (int) IMMEDIATE_VAL(op));
     }
   else
     printf("r%u", op);
@@ -2613,39 +2613,39 @@ test_sequence(insn_t *sequence, int n_insns)
   for (j = n_test_sets; j > 0; j--)
     {
       /* Update the tvalues array in each iteration, as execution of the
-	 sequence might clobber the values.  (On 2-operand machines.)  */
+         sequence might clobber the values.  (On 2-operand machines.)  */
       for (i = arity - 1; i >= 0; i--)
-	tvalues[i] = *test_set++;
+        tvalues[i] = *test_set++;
 
       /* Execute the synthesised sequence for the current operand
-	 values.  */
+         values.  */
 #if HAS_NULLIFICATION
       /* Kludge.  run_program returns -2 if a sequence depends on an
-	 undefined register.  */
+         undefined register.  */
       if (run_program (sequence, n_insns, tvalues, arity) == -2)
-	return;
+        return;
 #else
       run_program (sequence, n_insns, tvalues);
 #endif
       if (tvalues[sequence[n_insns - 1].d] != *test_set++)
-	{
-	  /* Adaptively rearrange the order of the tests.  This set of test
-	     values is better than all that preceed it.  The optimal
-	     ordering changes with the search space.  */
-	  if ((j = n_test_sets - j) != 0)
-	    {
-	      int k = j >> 1;
-	      j *= (arity + 1);
-	      k *= (arity + 1);
-	      for (i = 0; i <= arity; i++)
-		{
-		  word t = test_sets[j + i];
-		  test_sets[j + i] = test_sets[k + i];
-		  test_sets[k + i] = t;
-		}
-	    }
-	  return;
-	}
+        {
+          /* Adaptively rearrange the order of the tests.  This set of test
+             values is better than all that preceed it.  The optimal
+             ordering changes with the search space.  */
+          if ((j = n_test_sets - j) != 0)
+            {
+              int k = j >> 1;
+              j *= (arity + 1);
+              k *= (arity + 1);
+              for (i = 0; i <= arity; i++)
+                {
+                  word t = test_sets[j + i];
+                  test_sets[j + i] = test_sets[k + i];
+                  test_sets[k + i] = t;
+                }
+            }
+          return;
+        }
     }
 
 #ifdef EXTRA_SEQUENCE_TESTS
@@ -2664,25 +2664,25 @@ test_sequence(insn_t *sequence, int n_insns)
 
       insn = sequence[pc];
       if (flag_output_assembly)
-	output_assembly(insn);
+        output_assembly(insn);
       else
-	{
-	  /* Special case for insns that does not affect any general
-	     register.  */
-	  if (GET_INSN_CLASS (insn.opcode) == '='
-	      || GET_INSN_CLASS (insn.opcode) == '<')
-	    printf("\t%s(", GET_INSN_NAME(insn.opcode));
-	  else
-	    printf("\tr%u:=%s(", insn.d, GET_INSN_NAME(insn.opcode));
-	  print_operand (insn.s1);
+        {
+          /* Special case for insns that does not affect any general
+             register.  */
+          if (GET_INSN_CLASS (insn.opcode) == '='
+              || GET_INSN_CLASS (insn.opcode) == '<')
+            printf("\t%s(", GET_INSN_NAME(insn.opcode));
+          else
+            printf("\tr%u:=%s(", insn.d, GET_INSN_NAME(insn.opcode));
+          print_operand (insn.s1);
 
-	  if (!UNARY_OPERATION(insn))
-	    {
-	      printf (",");
-	      print_operand (insn.s2);
-	    }
-	  printf(")\n");
-	}
+          if (!UNARY_OPERATION(insn))
+            {
+              printf (",");
+              print_operand (insn.s2);
+            }
+          printf(")\n");
+        }
     }
   fflush(stdout);
 }
@@ -2693,26 +2693,26 @@ test_sequence(insn_t *sequence, int n_insns)
 #define MAKE_LEAF 0
 
 #define RECURSE(opcode, s1, s2, prune_hint) \
-  recurse(opcode, n_values, s1, s2, v, 1, sequence, n_insns, values,	\
-	  n_values + 1, goal_value, allowed_cost, co, prune_hint)
+  recurse(opcode, n_values, s1, s2, v, 1, sequence, n_insns, values,    \
+          n_values + 1, goal_value, allowed_cost, co, prune_hint)
 
 /* Don't increment n_values unconditionally here, since we often reuse a
    register (if the insn can be nullified) and thus don't generate any more
    values.  Instead, increment n_values when we really use a new destination
    register.  */
 #define PA_RECURSE(opcode, d, s1, s2, prune_hint, nullify_flag) \
-  recurse(opcode, d, s1, s2, v, 1, sequence, n_insns, values,	\
-	  n_values + (n_values == d), goal_value, allowed_cost, co, prune_hint, nullify_flag)
+  recurse(opcode, d, s1, s2, v, 1, sequence, n_insns, values,   \
+          n_values + (n_values == d), goal_value, allowed_cost, co, prune_hint, nullify_flag)
 
 /* CISC recurse, not generating a new register.  */
 #define CRECURSE_2OP(opcode, d, s1, s2, cost, prune_hint) \
-  recurse(opcode, d, s1, s2, v, cost, sequence, n_insns, values,	\
-	  n_values, goal_value, allowed_cost, co, prune_hint)
+  recurse(opcode, d, s1, s2, v, cost, sequence, n_insns, values,        \
+          n_values, goal_value, allowed_cost, co, prune_hint)
 
 /* CISC recurse, generating a new register.  */
 #define CRECURSE_NEW(opcode, d, s1, s2, cost, prune_hint) \
-  recurse(opcode, d, s1, s2, v, cost, sequence, n_insns, values,	\
-	  n_values + 1, goal_value, allowed_cost, co, prune_hint)
+  recurse(opcode, d, s1, s2, v, cost, sequence, n_insns, values,        \
+          n_values + 1, goal_value, allowed_cost, co, prune_hint)
 
 #include "synth.def"
 
@@ -2772,9 +2772,9 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
   for (i = 0; i < 50; i++)
     {
       for (ii = 0; ii < goal_function_arity; ii++)
-	values[ii] = random_word();
+        values[ii] = random_word();
       if ((*eval_goal_function)(values) != 0)
-	break;
+        break;
     }
 
   ii = 0;
@@ -2805,13 +2805,13 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
     {
 #if TIMING
       for (i = 0; i <= max_cost; i++)
-	timings[i] = 0;
+        timings[i] = 0;
 #endif
 
       if (success)
-	printf ("[cost %d]\n", max_cost + ii);
+        printf ("[cost %d]\n", max_cost + ii);
       else
-	printf(" %d", max_cost + ii);
+        printf(" %d", max_cost + ii);
       fflush(stdout);
 
 #if HAS_NULLIFICATION
@@ -2821,12 +2821,12 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
 #endif
 
       /* Don't pass CY_JUST_SET ever, since we don't know which of the
-	 predefined insn above set cy.  */
+         predefined insn above set cy.  */
       SYNTH(sequence, ii, values, goal_function_arity+ii,
-	    (*eval_goal_function)(values),
-	    max_cost, i, NO_PRUNE
-	    , NOT_NULLIFY
-	    );
+            (*eval_goal_function)(values),
+            max_cost, i, NO_PRUNE
+            , NOT_NULLIFY
+            );
 
 #ifdef STATISTICS
       printf("\n");
@@ -2835,52 +2835,52 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
 #endif
 #if TIMING
       for (i = 1; i <= max_cost; i++)
-	printf ("time %d: %d\n", i, timings[i] - timings[i - 1]);
+        printf ("time %d: %d\n", i, timings[i] - timings[i - 1]);
 #endif
 
       if (success)
-	{
-	  allowed_extra_cost--;
-	  if (allowed_extra_cost < 0)
-	    {
-	      static char *s[] = {"", "s"};
-	      printf("[%d sequence%s found]\n", success,
-		      s[success != 1]);
-	      return;
-	    }
-	}
+        {
+          allowed_extra_cost--;
+          if (allowed_extra_cost < 0)
+            {
+              static char *s[] = {"", "s"};
+              printf("[%d sequence%s found]\n", success,
+                      s[success != 1]);
+              return;
+            }
+        }
     }
   printf(" failure.\n");
 }
 
 /* Create a function for each DEF_GOAL.  When optimized, these are very
    efficient.  */
-#undef	DEF_GOAL
+#undef  DEF_GOAL
 #ifdef __STDC__
-#define DEF_GOAL(SYM,ARITY,NAME,CODE)	 	\
-word SYM ## _func (const word *v)		\
+#define DEF_GOAL(SYM,ARITY,NAME,CODE)           \
+word SYM ## _func (const word *v)               \
 GOAL_FUNCTION (ARITY, CODE)
 #else
-#define DEF_GOAL(SYM,ARITY,NAME,CODE)	 	\
-word SYM/**/_func (v) word *v;			\
+#define DEF_GOAL(SYM,ARITY,NAME,CODE)           \
+word SYM/**/_func (v) word *v;                  \
 GOAL_FUNCTION (ARITY, CODE)
 #endif
-#define GOAL_FUNCTION(ARITY,CODE)		\
-{						\
-  word r, v0, v1, v2, v3;			\
-  switch (ARITY)				\
-    {						\
-    default:					\
-      abort ();					\
-    case 4: v3 = v[3];				\
-    case 3: v2 = v[2];				\
-    case 2: v1 = v[1];				\
-    case 1: v0 = v[0];				\
-    }						\
-  CODE;						\
-  return r;					\
+#define GOAL_FUNCTION(ARITY,CODE)               \
+{                                               \
+  word r, v0, v1, v2, v3;                       \
+  switch (ARITY)                                \
+    {                                           \
+    default:                                    \
+      abort ();                                 \
+    case 4: v3 = v[3];                          \
+    case 3: v2 = v[2];                          \
+    case 2: v1 = v[1];                          \
+    case 1: v0 = v[0];                          \
+    }                                           \
+  CODE;                                         \
+  return r;                                     \
 }
-#undef	DEF_SYNONYM
+#undef  DEF_SYNONYM
 #define DEF_SYNONYM(SYM,NAME)
 #include "goal.def"
 
@@ -2894,20 +2894,20 @@ struct
 } goal_table[] =
 {
 /* Start off with entries so that goal_names[i].fcode == i.  */
-#undef	DEF_GOAL
+#undef  DEF_GOAL
 #ifdef __STDC__
 #define DEF_GOAL(SYM,ARITY,NAME,CODE) {NAME, SYM, ARITY, #CODE, SYM ## _func},
 #else
 #define DEF_GOAL(SYM,ARITY,NAME,CODE) {NAME, SYM, ARITY, "CODE", SYM/**/_func},
 #endif
-#undef	DEF_SYNONYM
+#undef  DEF_SYNONYM
 #define DEF_SYNONYM(SYM,NAME)
 #include "goal.def"
 
 /* Now add the synonyms.  */
-#undef	DEF_GOAL
+#undef  DEF_GOAL
 #define DEF_GOAL(SYM,ARITY,NAME,CODE)
-#undef	DEF_SYNONYM
+#undef  DEF_SYNONYM
 #define DEF_SYNONYM(SYM,NAME) {NAME, SYM, 0, 0},
 #include "goal.def"
 };
@@ -2947,109 +2947,109 @@ main(int argc, char **argv)
       int arglen = strlen(arg);
 
       if (arglen < 2)
-	arglen = 2;
+        arglen = 2;
 
       if (!strncmp(arg, "-version", arglen))
-	{
-	  printf ("%s version %s\n", program, version_string);
-	  printf ("(%s)\n", TARGET_STRING);
-	  if (argc == 1)
-	    exit (0);
-	}
+        {
+          printf ("%s version %s\n", program, version_string);
+          printf ("(%s)\n", TARGET_STRING);
+          if (argc == 1)
+            exit (0);
+        }
       else if (!strncmp(arg, "-assembly", arglen))
-	flag_output_assembly = 1;
+        flag_output_assembly = 1;
       else if (!strncmp(arg, "-no-carry-insns", arglen))
-	flag_use_carry = 0;
+        flag_use_carry = 0;
       else if (!strncmp(arg, "-all", arglen))
-	flag_all = 1;
+        flag_all = 1;
       else if (!strncmp(arg, "-nl", arglen))
-	flag_nl = 1;
+        flag_nl = 1;
       else if (!strncmp(arg, "-shifts", arglen))
-	flag_shifts = 1;
+        flag_shifts = 1;
       else if (!strncmp(arg, "-extracts", arglen))
-	flag_extracts = 1;
+        flag_extracts = 1;
       else if (!strncmp(arg, "-max-cost", arglen))
-	{
-	  argv++;
-	  argc--;
-	  if (argc == 0)
-	    {
-	      fprintf(stderr, "superoptimizer: argument to `-max-cost' expected\n");
-	      exit(-1);
-	    }
-	  maxmax_cost = atoi(argv[0]);
-	}
+        {
+          argv++;
+          argc--;
+          if (argc == 0)
+            {
+              fprintf(stderr, "superoptimizer: argument to `-max-cost' expected\n");
+              exit(-1);
+            }
+          maxmax_cost = atoi(argv[0]);
+        }
       else if (!strncmp(arg, "-extra-cost", arglen))
-	{
-	  argv++;
-	  argc--;
-	  if (argc == 0)
-	    {
-	      fprintf(stderr, "superoptimizer: argument `-extra-cost' expected\n");
-	      exit(-1);
-	    }
-	  allowed_extra_cost = atoi(argv[0]);
-	}
+        {
+          argv++;
+          argc--;
+          if (argc == 0)
+            {
+              fprintf(stderr, "superoptimizer: argument `-extra-cost' expected\n");
+              exit(-1);
+            }
+          allowed_extra_cost = atoi(argv[0]);
+        }
       else if (!strncmp(arg, "-f", 2))
-	{
-	  int i;
-	  for (i = 0; i < sizeof(goal_table) / sizeof(goal_table[0]); i++)
-	    {
-	      if (!strcmp(arg + 2, goal_table[i].fname))
-		{
-		  goal_function = goal_table[i].fcode;
-		  goal_function_arity = GET_GOAL_ARITY(goal_function);
-		  eval_goal_function = GET_GOAL_FUNCTION(goal_function);
-		  break;
-		}
-	    }
-	  if (goal_function == LAST_AND_UNUSED_GOAL_CODE)
-	    {
-	      fprintf(stderr, "superoptimizer: unknown goal function\n");
-	      exit(-1);
-	    }
-	}
+        {
+          int i;
+          for (i = 0; i < sizeof(goal_table) / sizeof(goal_table[0]); i++)
+            {
+              if (!strcmp(arg + 2, goal_table[i].fname))
+                {
+                  goal_function = goal_table[i].fcode;
+                  goal_function_arity = GET_GOAL_ARITY(goal_function);
+                  eval_goal_function = GET_GOAL_FUNCTION(goal_function);
+                  break;
+                }
+            }
+          if (goal_function == LAST_AND_UNUSED_GOAL_CODE)
+            {
+              fprintf(stderr, "superoptimizer: unknown goal function\n");
+              exit(-1);
+            }
+        }
       else
-	{
-	  int i, len, maxlen, cols, maxcols;
-	  char *prefix;
-	  fprintf(stderr, "Calling sequence:\n\n");
-	  fprintf(stderr, "\t%s -f<goal-function> [-assembly] [-max-cost n] \\\n", program);
-	  fprintf(stderr, "\t\t[-no-carry-insns] [-extra-cost n] [-nl]\n\n");
-	  fprintf(stderr, "Target machine: %s\n\n", TARGET_STRING);
-	  fprintf(stderr, "Supported goal functions:\n\n");
+        {
+          int i, len, maxlen, cols, maxcols;
+          char *prefix;
+          fprintf(stderr, "Calling sequence:\n\n");
+          fprintf(stderr, "\t%s -f<goal-function> [-assembly] [-max-cost n] \\\n", program);
+          fprintf(stderr, "\t\t[-no-carry-insns] [-extra-cost n] [-nl]\n\n");
+          fprintf(stderr, "Target machine: %s\n\n", TARGET_STRING);
+          fprintf(stderr, "Supported goal functions:\n\n");
 
-	  maxlen = 0;
-	  for (i = 0; i < sizeof(goal_table) / sizeof(goal_table[0]); i++)
-	    {
-	      len = strlen (goal_table[i].fname);
-	      if (len > maxlen)
-		maxlen = len;
-	    }
+          maxlen = 0;
+          for (i = 0; i < sizeof(goal_table) / sizeof(goal_table[0]); i++)
+            {
+              len = strlen (goal_table[i].fname);
+              if (len > maxlen)
+                maxlen = len;
+            }
 
-	  maxcols = 79 / (maxlen + 2);
-	  if (maxcols < 1)
-	    maxcols = 1;
+          maxcols = 79 / (maxlen + 2);
+          if (maxcols < 1)
+            maxcols = 1;
 
-	  cols = 1;
-	  prefix = "";
-	  for (i = 0; i < sizeof(goal_table) / sizeof(goal_table[0]); i++)
-	    {
-	      fprintf(stderr, "%s  %-*s", prefix, maxlen, goal_table[i].fname);
+          cols = 1;
+          prefix = "";
+          for (i = 0; i < sizeof(goal_table) / sizeof(goal_table[0]); i++)
+            {
+              fprintf(stderr, "%s  %-*s", prefix, maxlen, goal_table[i].fname);
 
-	      cols++;
-	      if (cols > maxcols)
-		{
-		  cols = 1;
-		  prefix = "\n";
-		}
-	      else
-		prefix = "";
-	    }
+              cols++;
+              if (cols > maxcols)
+                {
+                  cols = 1;
+                  prefix = "\n";
+                }
+              else
+                prefix = "";
+            }
 
-	  fprintf(stderr, "\n");
-	  exit(-1);
-	}
+          fprintf(stderr, "\n");
+          exit(-1);
+        }
 
       argv++;
       argc--;
@@ -3058,16 +3058,16 @@ main(int argc, char **argv)
   if (flag_all)
     {
       for (goal_function = 0; goal_function < LAST_AND_UNUSED_GOAL_CODE;
-	   goal_function++)
-	{
-	  printf("Searching for goal %s: ",
-		  GET_GOAL_NAME (goal_function));
-	  printf("%s\n", GET_GOAL_C_CODE(goal_function));
+           goal_function++)
+        {
+          printf("Searching for goal %s: ",
+                  GET_GOAL_NAME (goal_function));
+          printf("%s\n", GET_GOAL_C_CODE(goal_function));
 
-	  goal_function_arity = GET_GOAL_ARITY(goal_function);
-	  eval_goal_function = GET_GOAL_FUNCTION(goal_function);
-	  main_synth(maxmax_cost, allowed_extra_cost);
-	}
+          goal_function_arity = GET_GOAL_ARITY(goal_function);
+          eval_goal_function = GET_GOAL_FUNCTION(goal_function);
+          main_synth(maxmax_cost, allowed_extra_cost);
+        }
       exit (0);
     }
 

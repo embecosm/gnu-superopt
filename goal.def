@@ -39,12 +39,12 @@ DEF_GOAL (P7,             1, "p7",          { r = (v0+1) & ~v0; })
 DEF_GOAL (P8,             1, "p8",          { r = (v0-1) & ~v0; })
 DEF_GOAL (P9,             1, "p9",          { r = ((signed_word) v0 < 0)?-v0:v0; })
 DEF_GOAL (P10,            2, "p10",         { r =  (v0^v1) <= (v0&v1); })
-DEF_GOAL (P11,            2, "p11",         { r =  (v0&~v1) > v1 ; })    
-DEF_GOAL (P12,            2, "p12",         { r =  (v0&~v1) <= v1 ; })    
+DEF_GOAL (P11,            2, "p11",         { r =  (v0&~v1) > v1 ; })
+DEF_GOAL (P12,            2, "p12",         { r =  (v0&~v1) <= v1 ; })
 DEF_GOAL (P13,            1, "p13",         { r = (signed_word) v0 > 0 ? 1 : ((signed_word) v0 < 0 ? -1 : 0); })
-DEF_GOAL (P14,            2, "p14",         { r =  (v0&v1) + ((v0^v1)>>1) ; })    
-DEF_GOAL (P15,            2, "p15",         { r =  (v0|v1) - ((v0^v1)>>1) ; })    
-DEF_GOAL (P16,            2, "p16",         { r =  (v0 > v1)?v0:v1 ; })    
+DEF_GOAL (P14,            2, "p14",         { r =  (v0&v1) + ((v0^v1)>>1) ; })
+DEF_GOAL (P15,            2, "p15",         { r =  (v0|v1) - ((v0^v1)>>1) ; })
+DEF_GOAL (P16,            2, "p16",         { r =  (v0 > v1)?v0:v1 ; })
 DEF_GOAL (P17,            1, "p17",         { r = (((v0-1) | v0) + 1) & v0; })
 DEF_GOAL (P18,            1, "p18",         { r = !((v0-1) & v0) && v0; })
 DEF_GOAL (P19,            3, "p19",         { unsigned_word r__o3 = ((v0 >> v2) ^ v0) & v1; r = ((r__o3 << 1) ^ r__o3) ^ v0; })
@@ -52,10 +52,10 @@ DEF_GOAL (P20,            3, "p20",         { unsigned_word r__o2 = v0 & -v0; \
                                               unsigned_word r__o3 = r__o2 + v0; \
                                                             r = ((v0 ^ r__o2) >> 2 / r__o2) | r__o3; })
 DEF_GOAL (P21,            4, "p21",         { r = (v0 == v1)? v2 : ((v0 == v2)?v3:v1); })
-DEF_GOAL (P22,            1, "p22",         { r =  __builtin_popcountl(v0)&1 ; })    
-DEF_GOAL (P23,            1, "p23",         { r =  __builtin_popcountl(v0) ; })    
-DEF_GOAL (P24,            1, "p24",         { r =  (v0 <= 2)? v0 : ((1ULL << 32) >> __builtin_clz(v0 - 1)) ; })    
-DEF_GOAL (P25,            2, "p25",         { r =  ((unsigned long long)v0 * (unsigned long long)v1 >> 32) ; })    
+DEF_GOAL (P22,            1, "p22",         { r =  __builtin_popcountl(v0)&1 ; })
+DEF_GOAL (P23,            1, "p23",         { r =  __builtin_popcountl(v0) ; })
+DEF_GOAL (P24,            1, "p24",         { r =  (v0 <= 2)? v0 : ((1ULL << 32) >> __builtin_clz(v0 - 1)) ; })
+DEF_GOAL (P25,            2, "p25",         { r =  ((unsigned long long)v0 * (unsigned long long)v1 >> 32) ; })
 
 DEF_GOAL (EQ,             2, "eq",          { r = v0 == v1; })
 DEF_GOAL (NE,             2, "ne",          { r = v0 != v1; })
@@ -328,13 +328,13 @@ DEF_GOAL (ASHIFTR_30, 1, "sra30", { r = (signed_word) v0 >> 30; })
 DEF_GOAL (ASHIFTR_31, 1, "sra31", { r = (signed_word) v0 >> 31; })
 
 
-DEF_GOAL (CMPBYTES,	2, "cmpbytes",
+DEF_GOAL (CMPBYTES,     2, "cmpbytes",
   {
     union { word w; char b[4]; } __r1;
     union { word w; char b[4]; } __r2;
     __r1.w = (v0); __r2.w = (v1);
     r = ((__r1.b[0] != __r2.b[0]) && (__r1.b[1] != __r2.b[1])
-	 && (__r1.b[2] != __r2.b[2]) && (__r1.b[3] != __r2.b[3]));
+         && (__r1.b[2] != __r2.b[2]) && (__r1.b[3] != __r2.b[3]));
   })
 
 #ifdef __GNUC__
@@ -355,8 +355,8 @@ DEF_GOAL (UMULH11,     1, "umulh11",  ({ word t1; word t2; umul_ppmm (t1, t2, v0
 #ifdef __GNUC__
 DEF_GOAL (MORE_EVEN,     2, "more_even",  ({ r = (v0 & -v0) > (v1 & -v1) ; }))
 #endif /* __GNUC__ */
-DEF_GOAL (CLEAR_LSB,	1, "clear_lsb", { r = v0 & ~(v0 & -v0); })
-DEF_GOAL (CLEAR_LSB2,	2, "clear_lsb2", { r = v1 & ~(v0 & -v0); })
+DEF_GOAL (CLEAR_LSB,    1, "clear_lsb", { r = v0 & ~(v0 & -v0); })
+DEF_GOAL (CLEAR_LSB2,   2, "clear_lsb2", { r = v1 & ~(v0 & -v0); })
 
 #if 0
 DEF_GOAL (UDIV,           2, "udiv",        { r = v0 / v1; })
@@ -367,21 +367,21 @@ DEF_GOAL (OVERFLOW_AFTER_ADD, 3, "add_ovfl",  { r = (signed_word) (~(v1 ^ v2) & 
 
 /* The most and least significant bits of a double word left shift.  */
 DEF_GOAL (DBL_SHIFT_HI, 3, "dbl_shift_hi",
-	  { r = (v2 >= BITS_PER_WORD
-		 ? v0 << (v2 - BITS_PER_WORD)
-		 : (v1 << v2) | (v0 >> (BITS_PER_WORD - v2))); })
+          { r = (v2 >= BITS_PER_WORD
+                 ? v0 << (v2 - BITS_PER_WORD)
+                 : (v1 << v2) | (v0 >> (BITS_PER_WORD - v2))); })
 DEF_GOAL (DBL_SHIFT_LO, 2, "dbl_shift_lo",
-	  { r = (v1 >= BITS_PER_WORD
-		 ? 0
-		 : v0 << v1); })
+          { r = (v1 >= BITS_PER_WORD
+                 ? 0
+                 : v0 << v1); })
 DEF_GOAL (DBL_SHIFT_HI_TRUNC, 3, "dbl_shift_hi_trunc",
-	  { r = ((v2 & 2*BITS_PER_WORD-1) >= BITS_PER_WORD
-		 ? v0 << ((v2 & 2*BITS_PER_WORD-1) - BITS_PER_WORD)
-		 : (v1 << (v2 & 2*BITS_PER_WORD-1)) | (v0 >> (BITS_PER_WORD - (v2 & 2*BITS_PER_WORD-1)))); })
+          { r = ((v2 & 2*BITS_PER_WORD-1) >= BITS_PER_WORD
+                 ? v0 << ((v2 & 2*BITS_PER_WORD-1) - BITS_PER_WORD)
+                 : (v1 << (v2 & 2*BITS_PER_WORD-1)) | (v0 >> (BITS_PER_WORD - (v2 & 2*BITS_PER_WORD-1)))); })
 DEF_GOAL (DBL_SHIFT_LO_TRUNC, 2, "dbl_shift_lo_trunc",
-	  { r = ((v1 & 2*BITS_PER_WORD-1) >= BITS_PER_WORD
-		 ? 0
-		 : v0 << (v1 & 2*BITS_PER_WORD-1)); })
+          { r = ((v1 & 2*BITS_PER_WORD-1) >= BITS_PER_WORD
+                 ? 0
+                 : v0 << (v1 & 2*BITS_PER_WORD-1)); })
 
 /*
 Local variables:

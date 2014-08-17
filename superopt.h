@@ -75,20 +75,20 @@
 /* Reject sequences that require two different registers to be allocated to
    register r0.  */
 #define EXTRA_SEQUENCE_TESTS(seq, n) \
-{									\
-  int reg0 = -1;	/* -1 means r0 is not yet allocated */		\
-  int i;								\
-  for (i = 0; i < n; i++)						\
-    {									\
-      if ((seq[i].opcode == AND || seq[i].opcode == XOR			\
-	   || seq[i].opcode == IOR || seq[i].opcode == CYEQ)		\
-	  && IMMEDIATE_P (seq[i].s2) && IMMEDIATE_VAL (seq[i].s2) != 0)	\
-	{								\
-	  if (reg0 >= 0 && reg0 != seq[i].d)				\
-	    return;							\
-	  reg0 = seq[i].d;						\
-	}								\
-    }									\
+{                                                                       \
+  int reg0 = -1;        /* -1 means r0 is not yet allocated */          \
+  int i;                                                                \
+  for (i = 0; i < n; i++)                                               \
+    {                                                                   \
+      if ((seq[i].opcode == AND || seq[i].opcode == XOR                 \
+           || seq[i].opcode == IOR || seq[i].opcode == CYEQ)            \
+          && IMMEDIATE_P (seq[i].s2) && IMMEDIATE_VAL (seq[i].s2) != 0) \
+        {                                                               \
+          if (reg0 >= 0 && reg0 != seq[i].d)                            \
+            return;                                                     \
+          reg0 = seq[i].d;                                              \
+        }                                                               \
+    }                                                                   \
 }
 #elif  I960
 #define TARGET_STRING "Intel 960 v1.0"
@@ -119,7 +119,7 @@
    First define the types for it to operate on.  */
 #define UWtype word
 #define UHWtype word
-#define UDWtype unsigned long	/* Bogus, but we'll not depend on it */
+#define UDWtype unsigned long   /* Bogus, but we'll not depend on it */
 #define W_TYPE_SIZE BITS_PER_WORD
 #define SItype int
 #define USItype unsigned int
@@ -138,7 +138,7 @@ enum { NOT_NULLIFY = 0, NULLIFY = 1 };
 typedef unsigned long long int unsigned_word;
 typedef signed long long int signed_word;
 typedef unsigned_word word;
-#undef PSTR			/* no portable way to print */
+#undef PSTR                     /* no portable way to print */
 #elif __alpha /* Native compiler on alpha has 64 bit longs.  */
 typedef unsigned long int unsigned_word;
 typedef signed long int signed_word;
@@ -225,83 +225,83 @@ typedef struct
 
 #if sparc
 #define PERFORM_ADD_CIO(d, co, r1, r2, ci) \
-  asm ("subcc %%g0,%4,%%g0	! set cy if CI != 0 \
-	addxcc %2,%3,%0		! add R1 and R2 \
-	addx %%g0,%%g0,%1	! set CO to cy"				\
-       : "=r" (d), "=r" (co)						\
-       : "%r" (r1), "rI" (r2), "rI" (ci)				\
+  asm ("subcc %%g0,%4,%%g0      ! set cy if CI != 0 \
+        addxcc %2,%3,%0         ! add R1 and R2 \
+        addx %%g0,%%g0,%1       ! set CO to cy"                         \
+       : "=r" (d), "=r" (co)                                            \
+       : "%r" (r1), "rI" (r2), "rI" (ci)                                \
        __CLOBBER_CC)
 #define PERFORM_ADD_CO(d, co, r1, r2, ci) \
-  asm ("addcc %2,%3,%0		! add R1 and R2 \
-	addx %%g0,%%g0,%1	! set CO to cy"				\
-       : "=r" (d), "=r" (co)						\
-       : "%r" (r1), "rI" (r2)						\
+  asm ("addcc %2,%3,%0          ! add R1 and R2 \
+        addx %%g0,%%g0,%1       ! set CO to cy"                         \
+       : "=r" (d), "=r" (co)                                            \
+       : "%r" (r1), "rI" (r2)                                           \
        __CLOBBER_CC)
 #define PERFORM_SUB_CIO(d, co, r1, r2, ci) \
-  asm ("subcc %%g0,%4,%%g0	! set cy if CI != 0 \
-	subxcc %2,%3,%0		! subtract R2 from R1 \
-	addx %%g0,%%g0,%1	! set CO to cy"				\
-       : "=r" (d), "=r" (co)						\
-       : "r" (r1), "rI" (r2), "rI" (ci)					\
+  asm ("subcc %%g0,%4,%%g0      ! set cy if CI != 0 \
+        subxcc %2,%3,%0         ! subtract R2 from R1 \
+        addx %%g0,%%g0,%1       ! set CO to cy"                         \
+       : "=r" (d), "=r" (co)                                            \
+       : "r" (r1), "rI" (r2), "rI" (ci)                                 \
        __CLOBBER_CC)
 #define PERFORM_SUB_CO(d, co, r1, r2, ci) \
-  asm ("subcc %2,%3,%0		! subtract R2 from R1 \
-	addx %%g0,%%g0,%1	! set CO to cy"				\
-       : "=r" (d), "=r" (co)						\
-       : "r" (r1), "rI" (r2)						\
+  asm ("subcc %2,%3,%0          ! subtract R2 from R1 \
+        addx %%g0,%%g0,%1       ! set CO to cy"                         \
+       : "=r" (d), "=r" (co)                                            \
+       : "r" (r1), "rI" (r2)                                            \
        __CLOBBER_CC)
 #define PERFORM_ADC_CIO(d, co, r1, r2, ci) \
-  asm ("subcc %4,1,%%g0		! cy = (CI == 0) \
-	subxcc %2,%3,%0		! subtract R2 from R1 \
-	subx %%g0,-1,%1		! set CO to !cy"			\
-       : "=&r" (d), "=r" (co)						\
-       : "r" (r1), "rI" (r2), "rI" (ci)					\
+  asm ("subcc %4,1,%%g0         ! cy = (CI == 0) \
+        subxcc %2,%3,%0         ! subtract R2 from R1 \
+        subx %%g0,-1,%1         ! set CO to !cy"                        \
+       : "=&r" (d), "=r" (co)                                           \
+       : "r" (r1), "rI" (r2), "rI" (ci)                                 \
        __CLOBBER_CC)
 #define PERFORM_ADC_CO(d, co, r1, r2, ci) \
-  asm ("subcc %2,%3,%0		! subtract R2 from R1 \
-	subx %%g0,-1,%1		! set CO to !cy"			\
-       : "=&r" (d), "=r" (co)						\
-       : "r" (r1), "rI" (r2)						\
+  asm ("subcc %2,%3,%0          ! subtract R2 from R1 \
+        subx %%g0,-1,%1         ! set CO to !cy"                        \
+       : "=&r" (d), "=r" (co)                                           \
+       : "r" (r1), "rI" (r2)                                            \
        __CLOBBER_CC)
 #endif /* sparc */
 
 #if m88k
 #define PERFORM_ADD_CIO(d, co, r1, r2, ci) \
   asm ("or %0,r0,1 \
-	subu.co r0,%4,%0	; set cy if CI != 0 \
-	addu.cio %0,%2,%r3	; add R1 and R2 \
-	addu.ci %1,r0,r0	; set CO to cy"				\
-       : "=&r" (d), "=r" (co)						\
+        subu.co r0,%4,%0        ; set cy if CI != 0 \
+        addu.cio %0,%2,%r3      ; add R1 and R2 \
+        addu.ci %1,r0,r0        ; set CO to cy"                         \
+       : "=&r" (d), "=r" (co)                                           \
        : "%r" (r1), "Or" (r2), "r" (ci))
 #define PERFORM_ADD_CO(d, co, r1, r2, ci) \
-  asm ("addu.co %0,%2,%r3	; add R1 and R2 \
-	addu.ci %1,r0,r0	; set CO to cy"				\
-       : "=r" (d), "=r" (co)						\
+  asm ("addu.co %0,%2,%r3       ; add R1 and R2 \
+        addu.ci %1,r0,r0        ; set CO to cy"                         \
+       : "=r" (d), "=r" (co)                                            \
        : "%r" (r1), "Or" (r2))
 #define PERFORM_SUB_CIO(d, co, r1, r2, ci) \
-  asm ("subu.co r0,r0,%r4	; reset cy if CI != 0 \
-	subu.cio %0,%2,%r3	; subtract R2 from R1 \
-	subu.ci %1,r0,r0	; set CO to -1+cy \
-	subu %1,r0,%1		; set CO to !cy"			\
-       : "=r" (d), "=r" (co)						\
+  asm ("subu.co r0,r0,%r4       ; reset cy if CI != 0 \
+        subu.cio %0,%2,%r3      ; subtract R2 from R1 \
+        subu.ci %1,r0,r0        ; set CO to -1+cy \
+        subu %1,r0,%1           ; set CO to !cy"                        \
+       : "=r" (d), "=r" (co)                                            \
        : "r" (r1), "Or" (r2), "Or" (ci))
 #define PERFORM_SUB_CO(d, co, r1, r2, ci) \
-  asm ("subu.co %0,%2,%r3	; subtract R2 from R1 \
-	subu.ci %1,r0,r0	; set CO to -1+cy \
-	subu %1,r0,%1		; set CO to !cy"			\
-       : "=r" (d), "=r" (co)						\
+  asm ("subu.co %0,%2,%r3       ; subtract R2 from R1 \
+        subu.ci %1,r0,r0        ; set CO to -1+cy \
+        subu %1,r0,%1           ; set CO to !cy"                        \
+       : "=r" (d), "=r" (co)                                            \
        : "r" (r1), "Or" (r2))
 #define PERFORM_ADC_CIO(d, co, r1, r2, ci) \
   asm ("or %0,r0,1 \
-	subu.co r0,%r4,%0	; set cy if CI != 0 \
-	subu.cio %0,%2,%r3	; subtract R2 from R1 \
-	addu.ci %1,r0,r0	; set CO to cy"				\
-       : "=&r" (d), "=r" (co)						\
+        subu.co r0,%r4,%0       ; set cy if CI != 0 \
+        subu.cio %0,%2,%r3      ; subtract R2 from R1 \
+        addu.ci %1,r0,r0        ; set CO to cy"                         \
+       : "=&r" (d), "=r" (co)                                           \
        : "r" (r1), "Or" (r2), "Or" (ci))
 #define PERFORM_ADC_CO(d, co, r1, r2, ci) \
-  asm ("subu.co %0,%2,%r3	; subtract R2 from R1 \
-	addu.ci %1,r0,r0	; set CO to cy"				\
-       : "=r" (d), "=r" (co)						\
+  asm ("subu.co %0,%2,%r3       ; subtract R2 from R1 \
+        addu.ci %1,r0,r0        ; set CO to cy"                         \
+       : "=r" (d), "=r" (co)                                            \
        : "r" (r1), "Or" (r2))
 #endif /* m88k */
 
@@ -318,21 +318,21 @@ typedef struct
   ((d) = (r1) + (r2), (co) = (ci))
 #ifndef PERFORM_ADD_CIO
 #define PERFORM_ADD_CIO(d, co, r1, r2, ci) \
-  do { word __d = (r1) + (ci);						\
-       word __cy = __d < (ci);						\
-       (d) = __d + (r2);						\
+  do { word __d = (r1) + (ci);                                          \
+       word __cy = __d < (ci);                                          \
+       (d) = __d + (r2);                                                \
        (co) = ((d) < __d) + __cy; } while (0)
 #endif
 #ifndef PERFORM_ADD_CI
 #define PERFORM_ADD_CI(d, co, r1, r2, ci) \
-  do { word __d = (r1) + (r2) + (ci);					\
-       (co) = (ci);							\
+  do { word __d = (r1) + (r2) + (ci);                                   \
+       (co) = (ci);                                                     \
        (d) = __d; } while (0)
 #endif
 #ifndef PERFORM_ADD_CO
 #define PERFORM_ADD_CO(d, co, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       (co) = __d < (r1);						\
+  do { word __d = (r1) + (r2);                                          \
+       (co) = __d < (r1);                                               \
        (d) = __d; } while (0)
 #endif
 
@@ -340,39 +340,39 @@ typedef struct
   ((d) = (r1) - (r2), (co) = (ci))
 #ifndef PERFORM_SUB_CIO
 #define PERFORM_SUB_CIO(d, co, r1, r2, ci) \
-  do { word __d = (r1) - (r2) - (ci);					\
-       (co) = (ci) ? __d >= (r1) : __d > (r1);				\
+  do { word __d = (r1) - (r2) - (ci);                                   \
+       (co) = (ci) ? __d >= (r1) : __d > (r1);                          \
        (d) = __d; } while (0)
 #endif
 #ifndef PERFORM_SUB_CI
 #define PERFORM_SUB_CI(d, co, r1, r2, ci) \
-  do { word __d = (r1) - (r2) - (ci);					\
-       (co) = (ci);							\
+  do { word __d = (r1) - (r2) - (ci);                                   \
+       (co) = (ci);                                                     \
        (d) = __d; } while (0)
 #endif
 #ifndef PERFORM_SUB_CO
 #define PERFORM_SUB_CO(d, co, r1, r2, ci) \
-  do { word __d = (r1) - (r2);						\
-       (co) = __d > (r1);						\
+  do { word __d = (r1) - (r2);                                          \
+       (co) = __d > (r1);                                               \
        (d) = __d; } while (0)
 #endif
 
 #ifndef PERFORM_ADC_CIO
 #define PERFORM_ADC_CIO(d, co, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + (ci);					\
-       (co) = (ci) ? __d <= (r1) : __d < (r1);				\
+  do { word __d = (r1) + ~(r2) + (ci);                                  \
+       (co) = (ci) ? __d <= (r1) : __d < (r1);                          \
        (d) = __d; } while (0)
 #endif
 #ifndef PERFORM_ADC_CI
 #define PERFORM_ADC_CI(d, co, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + (ci);					\
-       (co) = (ci);							\
+  do { word __d = (r1) + ~(r2) + (ci);                                  \
+       (co) = (ci);                                                     \
        (d) = __d; } while (0)
 #endif
 #ifndef PERFORM_ADC_CO
 #define PERFORM_ADC_CO(d, co, r1, r2, ci) \
-  do { word __d = (r1) - (r2);						\
-       (co) = __d <= (r1);						\
+  do { word __d = (r1) - (r2);                                          \
+       (co) = __d <= (r1);                                              \
        (d) = __d; } while (0)
 #endif
 
@@ -396,20 +396,20 @@ typedef struct
 #endif
 #ifndef PERFORM_CMPPAR
 #define PERFORM_CMPPAR(d, co, r1, r2, ci) \
-  do {									\
-    word __x;								\
-    union { long w; short h[2]; char b[4]; } __r1, __r2;		\
-    __r1.w = (r1); __r2.w = (r2);					\
-    __x = ((__r1.h[0] != __r2.h[0]) && (__r1.h[1] != __r2.h[1])) << 14;	\
-    __x |= ((__r1.b[0] != __r2.b[0]) && (__r1.b[1] != __r2.b[1])	\
-	   && (__r1.b[2] != __r2.b[2]) && (__r1.b[3] != __r2.b[3])) << 12; \
-    __x |= ((unsigned_word) (r1) >= (unsigned_word) (r2)) << 10;	\
-    __x |= ((unsigned_word) (r1) <= (unsigned_word) (r2)) << 8;		\
-    __x |= ((signed_word) (r1) >= (signed_word) (r2)) << 6;		\
-    __x |= ((signed_word) (r1) <= (signed_word) (r2)) << 4;		\
-    __x |= ((r1) != (r2)) << 2;						\
-    (d) = __x + 0x5554;		/* binary 0101010101010100 */		\
-    (co) = (ci);							\
+  do {                                                                  \
+    word __x;                                                           \
+    union { long w; short h[2]; char b[4]; } __r1, __r2;                \
+    __r1.w = (r1); __r2.w = (r2);                                       \
+    __x = ((__r1.h[0] != __r2.h[0]) && (__r1.h[1] != __r2.h[1])) << 14; \
+    __x |= ((__r1.b[0] != __r2.b[0]) && (__r1.b[1] != __r2.b[1])        \
+           && (__r1.b[2] != __r2.b[2]) && (__r1.b[3] != __r2.b[3])) << 12; \
+    __x |= ((unsigned_word) (r1) >= (unsigned_word) (r2)) << 10;        \
+    __x |= ((unsigned_word) (r1) <= (unsigned_word) (r2)) << 8;         \
+    __x |= ((signed_word) (r1) >= (signed_word) (r2)) << 6;             \
+    __x |= ((signed_word) (r1) <= (signed_word) (r2)) << 4;             \
+    __x |= ((r1) != (r2)) << 2;                                         \
+    (d) = __x + 0x5554;         /* binary 0101010101010100 */           \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 
@@ -517,12 +517,12 @@ typedef struct
 
 #ifndef PERFORM_LSHIFTR
 #define PERFORM_LSHIFTR(d, co, r1, r2, ci) \
-  ((d) = ((unsigned_word) (r1) >> TRUNC_CNT(r2)),			\
+  ((d) = ((unsigned_word) (r1) >> TRUNC_CNT(r2)),                       \
    (co) = (ci))
 #endif
 #ifndef PERFORM_ASHIFTR
 #define PERFORM_ASHIFTR(d, co, r1, r2, ci) \
-  ((d) = ((signed_word) (r1) >> TRUNC_CNT(r2)),				\
+  ((d) = ((signed_word) (r1) >> TRUNC_CNT(r2)),                         \
    (co) = (ci))
 #endif
 #ifndef PERFORM_SHIFTL
@@ -531,82 +531,82 @@ typedef struct
 #endif
 #ifndef PERFORM_ROTATEL
 #define PERFORM_ROTATEL(d, co, r1, r2, ci) \
- ((d) = TRUNC_CNT(r2) == 0 ? (r1)					\
+ ((d) = TRUNC_CNT(r2) == 0 ? (r1)                                       \
   : ((r1) << TRUNC_CNT(r2)) | ((r1) >> TRUNC_CNT(BITS_PER_WORD - (r2))),\
   (co) = (ci))
 #endif
 #ifndef PERFORM_LSHIFTR_CO
 #define PERFORM_LSHIFTR_CO(d, co, r1, r2, ci) \
-  do { word __d = ((unsigned_word) (r1) >> TRUNC_CNT(r2));		\
-       (co) = ((unsigned_word) (r1) >> (TRUNC_CNT(r2) - 1)) & 1;	\
+  do { word __d = ((unsigned_word) (r1) >> TRUNC_CNT(r2));              \
+       (co) = ((unsigned_word) (r1) >> (TRUNC_CNT(r2) - 1)) & 1;        \
        (d) = __d; } while (0)
 #endif
 #ifndef PERFORM_ASHIFTR_CO
 #define PERFORM_ASHIFTR_CO(d, co, r1, r2, ci) \
-  do { word __d = ((signed_word) (r1) >> TRUNC_CNT(r2));		\
-       (co) = ((signed_word) (r1) >> (TRUNC_CNT(r2) - 1)) & 1;		\
+  do { word __d = ((signed_word) (r1) >> TRUNC_CNT(r2));                \
+       (co) = ((signed_word) (r1) >> (TRUNC_CNT(r2) - 1)) & 1;          \
        (d) = __d; } while (0)
 #endif
 #ifndef PERFORM_ASHIFTR_CON
 #define PERFORM_ASHIFTR_CON(d, co, r1, r2, ci) \
-  do { word __d = ((signed_word) (r1) >> TRUNC_CNT(r2));		\
-	 (co) = (signed_word) (r1) < 0					\
-	   && ((r1) << TRUNC_CNT(BITS_PER_WORD - (r2))) != 0;		\
+  do { word __d = ((signed_word) (r1) >> TRUNC_CNT(r2));                \
+         (co) = (signed_word) (r1) < 0                                  \
+           && ((r1) << TRUNC_CNT(BITS_PER_WORD - (r2))) != 0;           \
        (d) = __d; } while (0)
 #endif
 #ifndef PERFORM_SHIFTL_CO
 #define PERFORM_SHIFTL_CO(d, co, r1, r2, ci) \
-  do { word __d = ((unsigned_word) (r1) << TRUNC_CNT(r2));		\
-       (co) = ((r1) >> TRUNC_CNT(BITS_PER_WORD - (r2))) & 1;		\
+  do { word __d = ((unsigned_word) (r1) << TRUNC_CNT(r2));              \
+       (co) = ((r1) >> TRUNC_CNT(BITS_PER_WORD - (r2))) & 1;            \
        (d) = __d; } while (0)
 #endif
 /* Do these first two rotates actually set carry correctly for r2 == 0??? */
 #ifndef PERFORM_ROTATEL_CO
 #define PERFORM_ROTATEL_CO(d, co, r1, r2, ci) \
-  ((d) = (((r1) << TRUNC_CNT(r2))					\
-	  | ((unsigned_word) (r1) >> TRUNC_CNT(BITS_PER_WORD - (r2)))),	\
+  ((d) = (((r1) << TRUNC_CNT(r2))                                       \
+          | ((unsigned_word) (r1) >> TRUNC_CNT(BITS_PER_WORD - (r2)))), \
    (co) = (d) & 1)
 #endif
 #ifndef PERFORM_ROTATER_CO
 #define PERFORM_ROTATER_CO(d, co, r1, r2, ci) \
-  ((d) = (((r1) >> TRUNC_CNT(r2))					\
-	  | ((unsigned_word) (r1) << TRUNC_CNT(BITS_PER_WORD - (r2)))),	\
+  ((d) = (((r1) >> TRUNC_CNT(r2))                                       \
+          | ((unsigned_word) (r1) << TRUNC_CNT(BITS_PER_WORD - (r2)))), \
    (co) = ((d) >> (BITS_PER_WORD - 1)) & 1)
 #endif
 #ifndef PERFORM_ROTATEXL_CIO
 #define PERFORM_ROTATEXL_CIO(d, co, r1, r2, ci) \
-  do { word __d;  unsigned cnt = TRUNC_CNT(r2);				\
-       if (cnt != 0)							\
-	 {								\
-	   __d = ((r1) << cnt) | ((ci) << (cnt - 1));			\
-	   if (cnt != 1)						\
-	     __d |= (unsigned_word) (r1) >> (BITS_PER_WORD - (cnt - 1));\
-	   (co) = ((unsigned_word) (r1) >> (BITS_PER_WORD - cnt)) & 1;	\
-	   (d) = __d;							\
-	 }								\
-       else								\
-	 {								\
-	   (co) = (ci);							\
-	   (d) = (r1);							\
-	 }								\
+  do { word __d;  unsigned cnt = TRUNC_CNT(r2);                         \
+       if (cnt != 0)                                                    \
+         {                                                              \
+           __d = ((r1) << cnt) | ((ci) << (cnt - 1));                   \
+           if (cnt != 1)                                                \
+             __d |= (unsigned_word) (r1) >> (BITS_PER_WORD - (cnt - 1));\
+           (co) = ((unsigned_word) (r1) >> (BITS_PER_WORD - cnt)) & 1;  \
+           (d) = __d;                                                   \
+         }                                                              \
+       else                                                             \
+         {                                                              \
+           (co) = (ci);                                                 \
+           (d) = (r1);                                                  \
+         }                                                              \
      } while (0)
 #endif
 #ifndef PERFORM_ROTATEXR_CIO
 #define PERFORM_ROTATEXR_CIO(d, co, r1, r2, ci) \
-  do { word __d;  unsigned cnt = TRUNC_CNT(r2);				\
-       if (cnt != 0)							\
-	 {								\
-	   __d = ((unsigned_word) (r1) >> cnt) | ((ci) << (BITS_PER_WORD - cnt)); \
-	   if (cnt != 1)						\
-	     __d |= ((r1) << (BITS_PER_WORD - (cnt - 1)));		\
-	   (co) = ((unsigned_word) (r1) >> (cnt - 1)) & 1;		\
-	   (d) = __d;							\
-	 }								\
-       else								\
-	 {								\
-	   (co) = (ci);							\
-	   (d) = (r1);							\
-	 }								\
+  do { word __d;  unsigned cnt = TRUNC_CNT(r2);                         \
+       if (cnt != 0)                                                    \
+         {                                                              \
+           __d = ((unsigned_word) (r1) >> cnt) | ((ci) << (BITS_PER_WORD - cnt)); \
+           if (cnt != 1)                                                \
+             __d |= ((r1) << (BITS_PER_WORD - (cnt - 1)));              \
+           (co) = ((unsigned_word) (r1) >> (cnt - 1)) & 1;              \
+           (d) = __d;                                                   \
+         }                                                              \
+       else                                                             \
+         {                                                              \
+           (co) = (ci);                                                 \
+           (d) = (r1);                                                  \
+         }                                                              \
      } while (0)
 #endif
 #ifndef PERFORM_EXTS1
@@ -636,7 +636,7 @@ typedef struct
 
 #ifndef PERFORM_DOZ
 #define PERFORM_DOZ(d, co, r1, r2, ci) \
-  (((d) = (signed_word) (r1) > (signed_word) (r2) ? (r1) - (r2) : 0),	\
+  (((d) = (signed_word) (r1) > (signed_word) (r2) ? (r1) - (r2) : 0),   \
    (co) = (ci))
 #endif
 
@@ -742,63 +742,63 @@ typedef struct
 /* Unary operations.  */
 #ifndef PERFORM_CLZ
 #define PERFORM_CLZ(d, co, r1, ci) \
-  do {									\
-    int __a = 0;							\
-    word __r = (r1);							\
-    if (__r > 0xffffffff)						\
-      __r = __r >> 31 >> 1, __a += 32;					\
-    if (__r > 0xffff)							\
-      __r >>= 16, __a += 16;						\
-    if (__r > 0xff)							\
-      __r >>= 8, __a += 8;						\
-    (d) = clz_tab[__r] - __a + BITS_PER_WORD - 32;			\
-    (co) = (ci);							\
+  do {                                                                  \
+    int __a = 0;                                                        \
+    word __r = (r1);                                                    \
+    if (__r > 0xffffffff)                                               \
+      __r = __r >> 31 >> 1, __a += 32;                                  \
+    if (__r > 0xffff)                                                   \
+      __r >>= 16, __a += 16;                                            \
+    if (__r > 0xff)                                                     \
+      __r >>= 8, __a += 8;                                              \
+    (d) = clz_tab[__r] - __a + BITS_PER_WORD - 32;                      \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 #ifndef PERFORM_CTZ
 /* This can be done faster using the (x & -x) trick.  */
 #define PERFORM_CTZ(d, co, r1, ci) \
-  do {									\
-    int __a;								\
-    abort ();								\
-    __a = ((r1) & 0xffff == 0)						\
-      ? (((r1) & 0xff0000) == 0 ? 24 : 16)				\
-      : ((r1) & 0xff == 0) ? 8 : 0;					\
-    (d) = ctz_tab[((r1) >> __a) & 0xff] + __a;				\
-    (co) = (ci);							\
+  do {                                                                  \
+    int __a;                                                            \
+    abort ();                                                           \
+    __a = ((r1) & 0xffff == 0)                                          \
+      ? (((r1) & 0xff0000) == 0 ? 24 : 16)                              \
+      : ((r1) & 0xff == 0) ? 8 : 0;                                     \
+    (d) = ctz_tab[((r1) >> __a) & 0xff] + __a;                          \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 #ifndef PERFORM_BITREV
-#define PERFORM_BITREV(d, co, r1, ci)					\
-  do {									\
-    unsigned_word __a = (r1);						\
-    __a = ((__a & 0xaaaaaaaa) >> 1) | ((__a & 0x55555555) << 1);	\
-    __a = ((__a & 0xcccccccc) >> 2) | ((__a & 0x33333333) << 2);	\
-    __a = ((__a & 0xf0f0f0f0) >> 4) | ((__a & 0x0f0f0f0f) << 4);	\
-    __a = ((__a & 0xff00ff00) >> 8) | ((__a & 0x00ff00ff) << 8);	\
-    (d) = (__a >> 16) | (__a << 16);					\
-    (co) = (ci);							\
+#define PERFORM_BITREV(d, co, r1, ci)                                   \
+  do {                                                                  \
+    unsigned_word __a = (r1);                                           \
+    __a = ((__a & 0xaaaaaaaa) >> 1) | ((__a & 0x55555555) << 1);        \
+    __a = ((__a & 0xcccccccc) >> 2) | ((__a & 0x33333333) << 2);        \
+    __a = ((__a & 0xf0f0f0f0) >> 4) | ((__a & 0x0f0f0f0f) << 4);        \
+    __a = ((__a & 0xff00ff00) >> 8) | ((__a & 0x00ff00ff) << 8);        \
+    (d) = (__a >> 16) | (__a << 16);                                    \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 #ifndef PERFORM_BYTEREV
 #define PERFORM_BYTEREV(d, co, r1, ci) \
   do { \
-    (d) = (((r1) & 0x000000ff) << 24) |					\
-	  (((r1) & 0x0000ff00) << 8) |					\
-	  (((r1) & 0x00ff0000) >> 8) |					\
-	  (((r1) & 0xff000000) >> 24);					\
-    (co) = (ci);							\
+    (d) = (((r1) & 0x000000ff) << 24) |                                 \
+          (((r1) & 0x0000ff00) << 8) |                                  \
+          (((r1) & 0x00ff0000) >> 8) |                                  \
+          (((r1) & 0xff000000) >> 24);                                  \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 #ifndef PERFORM_FF1
 #define PERFORM_FF1(d, co, r1, ci) \
-  do {									\
-    int __a;								\
-    __a = (r1) <= 0xffff						\
-      ? ((r1) <= 0xff ? 0 : 8)						\
-      : ((r1) <= 0xffffff ?  16 : 24);					\
-    (d) = ff1_tab[(r1) >> __a] + __a;					\
-    (co) = (ci);							\
+  do {                                                                  \
+    int __a;                                                            \
+    __a = (r1) <= 0xffff                                                \
+      ? ((r1) <= 0xff ? 0 : 8)                                          \
+      : ((r1) <= 0xffffff ?  16 : 24);                                  \
+    (d) = ff1_tab[(r1) >> __a] + __a;                                   \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 #ifndef PERFORM_FF0
@@ -807,20 +807,20 @@ typedef struct
 #endif
 #ifndef PERFORM_FFS
 #define PERFORM_FFS(d, co, r1, ci) \
-  do {									\
-    word __x = (r1) & (-r1);						\
-    PERFORM_CLZ(d, co, __x, ci);					\
-    (d) = BITS_PER_WORD - (d);						\
+  do {                                                                  \
+    word __x = (r1) & (-r1);                                            \
+    PERFORM_CLZ(d, co, __x, ci);                                        \
+    (d) = BITS_PER_WORD - (d);                                          \
   } while (0)
 #endif
 #ifndef PERFORM_BSF86
 #define PERFORM_BSF86(d, co, r1, ci) \
   do {                                                                  \
-    if ((r1) == 0)							\
-      (d) = random_word ();						\
-    else								\
-      PERFORM_FF1(d, co, (r1) & -(r1), ci);				\
-    (co) = -1;								\
+    if ((r1) == 0)                                                      \
+      (d) = random_word ();                                             \
+    else                                                                \
+      PERFORM_FF1(d, co, (r1) & -(r1), ci);                             \
+    (co) = -1;                                                          \
   } while (0)
 #endif
 #ifndef PERFORM_ABSVAL
@@ -859,47 +859,47 @@ typedef struct
 
 #ifndef PERFORM_INVDIV
 #define PERFORM_INVDIV(v, co, r1, ci) \
-  do {									\
-    word __q, __r;							\
-    udiv_qrnnd (__q, __r, -(r1), 0, (r1));				\
-    (v) = __q;								\
-    (co) = (ci);							\
+  do {                                                                  \
+    word __q, __r;                                                      \
+    udiv_qrnnd (__q, __r, -(r1), 0, (r1));                              \
+    (v) = __q;                                                          \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 #ifndef PERFORM_INVMOD
 #define PERFORM_INVMOD(v, co, r1, ci) \
-  do {									\
-    word __q, __r;							\
-    udiv_qrnnd (__q, __r, -(r1), 0, (r1));				\
-    (v) = __r;								\
-    (co) = (ci);							\
+  do {                                                                  \
+    word __q, __r;                                                      \
+    udiv_qrnnd (__q, __r, -(r1), 0, (r1));                              \
+    (v) = __r;                                                          \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 #ifndef PERFORM_MUL
 #define PERFORM_MUL(v, co, r1, r2, ci) \
-  do {									\
-    (v) = (r1) * (r2);							\
-    (co) = (ci);							\
+  do {                                                                  \
+    (v) = (r1) * (r2);                                                  \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 #ifndef PERFORM_UMULWIDEN_HI
 #define PERFORM_UMULWIDEN_HI(v, co, r1, r2, ci) \
-  do {									\
-    word __ph, __pl;							\
-    umul_ppmm (__ph, __pl, (r1), (r2));					\
-    (v) = __ph;								\
-    (co) = (ci);							\
+  do {                                                                  \
+    word __ph, __pl;                                                    \
+    umul_ppmm (__ph, __pl, (r1), (r2));                                 \
+    (v) = __ph;                                                         \
+    (co) = (ci);                                                        \
   } while (0)
 #endif
 
 #ifdef UDIV_WITH_SDIV
 #define PERFORM_SDIV(v, co, r1, r2, ci) \
-  do {									\
-    if ((r2) != 0)							\
-      (v) = (signed_word) (r1) / (signed_word) (r2);			\
-    else								\
-      (v) = 0;								\
-    (co) = (ci);							\
+  do {                                                                  \
+    if ((r2) != 0)                                                      \
+      (v) = (signed_word) (r1) / (signed_word) (r2);                    \
+    else                                                                \
+      (v) = 0;                                                          \
+    (co) = (ci);                                                        \
     } while (0)
 #endif /* UDIV_WITH_SDIV */
 
@@ -910,333 +910,333 @@ typedef struct
   ((d) = (r1), (co) = (ci), (sc) = 1)
 
 #define PERFORM_ADD_SEQ(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (r1) == -(r2))
 #define PERFORM_ADD_SNE(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (r1) != -(r2))
 #define PERFORM_ADD_SLTS(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (signed_word) (r1) < -(signed_word) (r2))
 #define PERFORM_ADD_SGES(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (signed_word) (r1) >= -(signed_word) (r2))
 #define PERFORM_ADD_SLES(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (signed_word) (r1) <= -(signed_word) (r2))
 #define PERFORM_ADD_SGTS(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (signed_word) (r1) > -(signed_word) (r2))
 #define PERFORM_ADD_SLTU(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (unsigned_word) (r1) < -(unsigned_word) (r2))
 #define PERFORM_ADD_SGEU(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (unsigned_word) (r1) >= -(unsigned_word) (r2))
 #define PERFORM_ADD_SLEU(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (unsigned_word) (r1) <= -(unsigned_word) (r2))
 #define PERFORM_ADD_SGTU(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (unsigned_word) (r1) > -(unsigned_word) (r2))
 #define PERFORM_ADD_SOVS(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (signed_word) (~((r1) ^ (r2)) & ((d) ^ (r1))) < 0)
 #define PERFORM_ADD_SNVS(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = (signed_word) (~((r1) ^ (r2)) & ((d) ^ (r1))) >= 0)
 #define PERFORM_ADD_SODD(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = ((d) & 1) != 0)
 #define PERFORM_ADD_SEVN(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) + (r2), (co) = (ci),					\
+  ((d) = (r1) + (r2), (co) = (ci),                                      \
    sc = ((d) & 1) == 0)
 #define PERFORM_ADD_S(d, co, sc, r1, r2, ci) \
   ((d) = (r1) + (r2), (co) = (ci), (sc) = 1)
 
 #define PERFORM_ADD_CIO_SEQ(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __d == 0; } while (0)
 #define PERFORM_ADD_CIO_SNE(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __d != 0; } while (0)
 #define PERFORM_ADD_CIO_SLTU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy == 0; } while (0)
 #define PERFORM_ADD_CIO_SGEU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy; } while (0)
 #define PERFORM_ADD_CIO_SLEU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy == 0 || __d == 0; } while (0)
 #define PERFORM_ADD_CIO_SGTU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy && __d != 0; } while (0)
 #define PERFORM_ADD_CIO_SODD(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = (__d & 1) != 0; } while (0)
 #define PERFORM_ADD_CIO_SEVN(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = (__d & 1) == 0; } while (0)
 #define PERFORM_ADD_CIO_S(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = 1; } while (0)
 
 #define PERFORM_ADD_CO_SEQ(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __d == 0; } while (0)
 #define PERFORM_ADD_CO_SNE(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __d != 0; } while (0)
 #define PERFORM_ADD_CO_SLTU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy == 0; } while (0)
 #define PERFORM_ADD_CO_SGEU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy; } while (0)
 #define PERFORM_ADD_CO_SLEU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy == 0 || __d == 0; } while (0)
 #define PERFORM_ADD_CO_SGTU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy && __d != 0; } while (0)
 #define PERFORM_ADD_CO_SODD(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = (__d & 1) != 0; } while (0)
 #define PERFORM_ADD_CO_SEVN(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = (__d & 1) == 0; } while (0)
 #define PERFORM_ADD_CO_S(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + (r2);						\
-       word __cy = __d < (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + (r2);                                          \
+       word __cy = __d < (r1);                                          \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = 1; } while (0)
 
 /* These are used with the hppa andc instruction to complement stuff.
    The conditions might be incorrect for any other usage.  */
 #define PERFORM_SUB_SEQ(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) - (r2), (co) = (ci),					\
+  ((d) = (r1) - (r2), (co) = (ci),                                      \
    sc = (d) == 0)
 #define PERFORM_SUB_SNE(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) - (r2), (co) = (ci),					\
+  ((d) = (r1) - (r2), (co) = (ci),                                      \
    sc = (d) != 0)
 #define PERFORM_SUB_SLTS(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) - (r2), (co) = (ci),					\
+  ((d) = (r1) - (r2), (co) = (ci),                                      \
    sc = (signed_word) (d) < 0)
 #define PERFORM_SUB_SGES(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) - (r2), (co) = (ci),					\
+  ((d) = (r1) - (r2), (co) = (ci),                                      \
    sc = (signed_word) (d) >= 0)
 #define PERFORM_SUB_SLES(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) - (r2), (co) = (ci),					\
+  ((d) = (r1) - (r2), (co) = (ci),                                      \
    sc = (signed_word) (d) <= 0)
 #define PERFORM_SUB_SGTS(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) - (r2), (co) = (ci),					\
+  ((d) = (r1) - (r2), (co) = (ci),                                      \
    sc = (signed_word) (d) > 0)
 #define PERFORM_SUB_SODD(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) - (r2), (co) = (ci),					\
+  ((d) = (r1) - (r2), (co) = (ci),                                      \
    sc = ((d) & 1) != 0)
 #define PERFORM_SUB_SEVN(d, co, sc, r1, r2, ci) \
-  ((d) = (r1) - (r2), (co) = (ci),					\
+  ((d) = (r1) - (r2), (co) = (ci),                                      \
    sc = ((d) & 1) == 0)
 #define PERFORM_SUB_S(d, co, sc, r1, r2, ci) \
   ((d) = (r1) - (r2), (co) = (ci), (sc) = 1)
 
 #define PERFORM_ADC_CIO_SEQ(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __d == 0; } while (0)
 #define PERFORM_ADC_CIO_SNE(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __d != 0; } while (0)
 #define PERFORM_ADC_CIO_SLTU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy == 0; } while (0)
 #define PERFORM_ADC_CIO_SGEU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy; } while (0)
 #define PERFORM_ADC_CIO_SLEU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy == 0 || __d == 0; } while (0)
 #define PERFORM_ADC_CIO_SGTU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy && __d != 0; } while (0)
 #define PERFORM_ADC_CIO_SODD(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = (__d & 1) != 0; } while (0)
 #define PERFORM_ADC_CIO_SEVN(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = (__d & 1) == 0; } while (0)
 #define PERFORM_ADC_CIO_S(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2);						\
-       word __cy = __d < (r1);						\
-       __d += (ci);							\
-       __cy += (__d < (ci));						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2);                                         \
+       word __cy = __d < (r1);                                          \
+       __d += (ci);                                                     \
+       __cy += (__d < (ci));                                            \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = 1; } while (0)
 
 #define PERFORM_ADC_CO_SEQ(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __d == 0; } while (0)
 #define PERFORM_ADC_CO_SNE(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __d != 0; } while (0)
 #define PERFORM_ADC_CO_SLTU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy == 0; } while (0)
 #define PERFORM_ADC_CO_SGEU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy; } while (0)
 #define PERFORM_ADC_CO_SLEU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy == 0 || __d == 0; } while (0)
 #define PERFORM_ADC_CO_SGTU(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = __cy && __d != 0; } while (0)
 #define PERFORM_ADC_CO_SODD(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = (__d & 1) != 0; } while (0)
 #define PERFORM_ADC_CO_SEVN(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = (__d & 1) == 0; } while (0)
 #define PERFORM_ADC_CO_S(d, co, sc, r1, r2, ci) \
-  do { word __d = (r1) + ~(r2) + 1;					\
-       word __cy = __d <= (r1);						\
-       (d) = __d;							\
-       (co) = __cy;							\
+  do { word __d = (r1) + ~(r2) + 1;                                     \
+       word __cy = __d <= (r1);                                         \
+       (d) = __d;                                                       \
+       (co) = __cy;                                                     \
        (sc) = 1; } while (0)
 
 /* Compare two quantities and nullify on condition; Clear destination register.  */
@@ -1348,7 +1348,7 @@ typedef struct
 #define PERFORM_SHIFTL_S(d, co, sc, r1, r2, ci) \
   ((d) = ((unsigned_word) (r1) << TRUNC_CNT(r2)), (co) = (ci), (sc) = 1)
 #define PERFORM_ROTATEL_S(d, co, sc, r1, r2, ci) \
- ((d) = TRUNC_CNT(r2) == 0 ? (r1)					\
+ ((d) = TRUNC_CNT(r2) == 0 ? (r1)                                       \
   : ((r1) << TRUNC_CNT(r2)) | ((r1) >> TRUNC_CNT(BITS_PER_WORD - (r2))),\
   (co) = (ci), (sc) = 1)
 #define PERFORM_EXTS1_S(d, co, sc, r1, r2, ci) \
@@ -1365,13 +1365,13 @@ typedef struct
   ((d) = ((unsigned_word) (r1) >> TRUNC_CNT(r2)) & 3, (co) = (ci), (sc) = 1)
 
 #define PERFORM_ZEXT(d, co, r1, r2, ci) \
-  ((d) = (((unsigned_word) (r2) < BITS_PER_WORD) && ((r2) != 0)		\
-	  ? ((unsigned_word) (r1) << (BITS_PER_WORD - (r2))) >> (BITS_PER_WORD - (r2)) \
-	  : (r2)), (co) = (ci))
+  ((d) = (((unsigned_word) (r2) < BITS_PER_WORD) && ((r2) != 0)         \
+          ? ((unsigned_word) (r1) << (BITS_PER_WORD - (r2))) >> (BITS_PER_WORD - (r2)) \
+          : (r2)), (co) = (ci))
 #define PERFORM_SEXT(d, co, r1, r2, ci) \
-  ((d) = (((unsigned_word) (r2) < BITS_PER_WORD) && ((r2) != 0)		\
-	  ? ((signed_word) (r1) << (BITS_PER_WORD - (r2))) >> (BITS_PER_WORD - (r2)) \
-	  : (r2)), (co) = (ci))
+  ((d) = (((unsigned_word) (r2) < BITS_PER_WORD) && ((r2) != 0)         \
+          ? ((signed_word) (r1) << (BITS_PER_WORD - (r2))) >> (BITS_PER_WORD - (r2)) \
+          : (r2)), (co) = (ci))
 
 #define IB0(x) x
 #define IB1(x) ((x) << 1)
@@ -1381,18 +1381,18 @@ typedef struct
 #define EB2(x) (((x) >> 2) & 1)
 
 #define PERFORM_ADDC_960(d, co, r1, r2, ci) \
-  do { word __d = (r1) + EB1(ci);					\
-       word __cy = __d < (r1);						\
-       (d) = __d + (r2);						\
-       (co) = (IB1(((d) < __d) + __cy)					\
-	       | IB0((signed_word) (~((r1) ^ (r2)) & ((d) ^ (r1))) < 0));\
+  do { word __d = (r1) + EB1(ci);                                       \
+       word __cy = __d < (r1);                                          \
+       (d) = __d + (r2);                                                \
+       (co) = (IB1(((d) < __d) + __cy)                                  \
+               | IB0((signed_word) (~((r1) ^ (r2)) & ((d) ^ (r1))) < 0));\
   } while (0)
 #define PERFORM_SUBC_960(d, co, r1, r2, ci) \
-  do { word __d = (r1) + EB1(ci);					\
-       word __cy = __d < (r1);						\
-       (d) = __d + ~(r2);						\
-       (co) = (IB1(((d) < __d) + __cy)					\
-	       | IB0((signed_word) (~((r1) ^ ~(r2)) & ((d) ^ (r1))) < 0));\
+  do { word __d = (r1) + EB1(ci);                                       \
+       word __cy = __d < (r1);                                          \
+       (d) = __d + ~(r2);                                               \
+       (co) = (IB1(((d) < __d) + __cy)                                  \
+               | IB0((signed_word) (~((r1) ^ ~(r2)) & ((d) ^ (r1))) < 0));\
   } while (0)
 #define PERFORM_SEL_NO_960(d, co, r1, r2, ci) \
   ((d) = (ci) == 0 ? (r2) : (r1), (co) = (ci))
@@ -1411,31 +1411,31 @@ typedef struct
 #define PERFORM_SEL_O_960(d, co, r1, r2, ci) \
   ((d) = ((ci) & 7) != 0 ? (r2) : (r1), (co) = (ci))
 #define PERFORM_CONCMPO_960(d, co, r1, r2, ci) \
-  ((co) = EB2(ci) == 0							\
+  ((co) = EB2(ci) == 0                                                  \
    ? ((unsigned_word) (r1) <= (unsigned_word) (r2)) + 1 : (ci))
 #define PERFORM_CONCMPI_960(d, co, r1, r2, ci) \
-  ((co) = EB2(ci) == 0							\
+  ((co) = EB2(ci) == 0                                                  \
    ? ((signed_word) (r1) <= (signed_word) (r2)) + 1 : (ci))
 #define PERFORM_CMPO_960(d, co, r1, r2, ci) \
-  ((co) = (IB0((unsigned_word) (r1) > (unsigned_word) (r2))		\
-	   | IB1((r1) == (r2))						\
-	   | IB2((unsigned_word) (r1) < (unsigned_word) (r2))))
+  ((co) = (IB0((unsigned_word) (r1) > (unsigned_word) (r2))             \
+           | IB1((r1) == (r2))                                          \
+           | IB2((unsigned_word) (r1) < (unsigned_word) (r2))))
 #define PERFORM_CMPI_960(d, co, r1, r2, ci) \
-  ((co) = (IB0((signed_word) (r1) > (signed_word) (r2))			\
-	   | IB1((r1) == (r2))						\
-	   | IB2((signed_word) (r1) < (signed_word) (r2))))
-#define PERFORM_SHIFTL_NT(d, co, r1, r2, ci)				\
-  ((d) = ((unsigned_word) (r2) < BITS_PER_WORD				\
-	  ? ((unsigned_word) (r1) << (r2))				\
-	  : 0), (co) = (ci))
+  ((co) = (IB0((signed_word) (r1) > (signed_word) (r2))                 \
+           | IB1((r1) == (r2))                                          \
+           | IB2((signed_word) (r1) < (signed_word) (r2))))
+#define PERFORM_SHIFTL_NT(d, co, r1, r2, ci)                            \
+  ((d) = ((unsigned_word) (r2) < BITS_PER_WORD                          \
+          ? ((unsigned_word) (r1) << (r2))                              \
+          : 0), (co) = (ci))
 #define PERFORM_LSHIFTR_NT(d, co, r1, r2, ci) \
-  ((d) = ((unsigned_word) (r2) < BITS_PER_WORD				\
-	  ? ((unsigned_word) (r1) >> (r2))				\
-	  : 0), (co) = (ci))
+  ((d) = ((unsigned_word) (r2) < BITS_PER_WORD                          \
+          ? ((unsigned_word) (r1) >> (r2))                              \
+          : 0), (co) = (ci))
 #define PERFORM_ASHIFTR_NT(d, co, r1, r2, ci) \
-  ((d) = ((unsigned_word) (r2) < BITS_PER_WORD				\
-	  ? ((signed_word) (r1) >> (r2))				\
-	  : -((signed_word) (r1) < 0)), (co) = (ci))
+  ((d) = ((unsigned_word) (r2) < BITS_PER_WORD                          \
+          ? ((signed_word) (r1) >> (r2))                                \
+          : -((signed_word) (r1) < 0)), (co) = (ci))
 #define PERFORM_ADDO_NO_960(d, co, r1, r2, ci) \
   ((d) = (ci) == 0 ? (r1) + (r2) : (d), (co) = (ci))
 #define PERFORM_ADDO_G_960(d, co, r1, r2, ci) \
@@ -1471,8 +1471,8 @@ typedef struct
   ((d) = ((ci) & 7) != 0 ? (r1) - (r2) : (d), (co) = (ci))
 
 #define PERFORM_ALTERBIT(d, co, r1, r2, ci) \
-  ((d) = (EB1(ci) ? (r1) | ((word) 1 << TRUNC_CNT(r2))			\
-		  : (r1) & ~((word) 1 << TRUNC_CNT(r2))),		\
+  ((d) = (EB1(ci) ? (r1) | ((word) 1 << TRUNC_CNT(r2))                  \
+                  : (r1) & ~((word) 1 << TRUNC_CNT(r2))),               \
    (co) = (ci))
 #define PERFORM_SETBIT(d, co, r1, r2, ci) \
   ((d) = (r1) | ((word) 1 << TRUNC_CNT(r2)), (co) = (ci))
@@ -1485,9 +1485,9 @@ typedef struct
 
 enum goal_func
 {
-#undef	DEF_GOAL
+#undef  DEF_GOAL
 #define DEF_GOAL(SYM,ARITY,NAME,CODE) SYM,
-#undef	DEF_SYNONYM
+#undef  DEF_SYNONYM
 #define DEF_SYNONYM(SYM,NAME)
 #include "goal.def"
   LAST_AND_UNUSED_GOAL_CODE
