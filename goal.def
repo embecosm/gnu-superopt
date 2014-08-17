@@ -50,7 +50,8 @@ DEF_GOAL (P18,            1, "p18",         { r = !((v0-1) & v0) && v0; })
 DEF_GOAL (P19,            3, "p19",         { unsigned_word r__o3 = ((v0 >> v2) ^ v0) & v1; r = ((r__o3 << 1) ^ r__o3) ^ v0; })
 DEF_GOAL (P20,            3, "p20",         { unsigned_word r__o2 = v0 & -v0; \
                                               unsigned_word r__o3 = r__o2 + v0; \
-                                                            r = ((v0 ^ r__o2) >> 2 / r__o2) | r__o3; })
+                                              unsigned_word r__o3a = ((v0 ^ r__o2) >> 2); \
+                                                            r = (r__o2?r__o3a / r__o2:0) | r__o3; })
 DEF_GOAL (P21,            4, "p21",         { r = (v0 == v1)? v2 : ((v0 == v2)?v3:v1); })
 DEF_GOAL (P22,            1, "p22",         { r =  __builtin_popcountl(v0)&1 ; })
 DEF_GOAL (P23,            1, "p23",         { r =  __builtin_popcountl(v0) ; })
