@@ -1,4 +1,8 @@
 2014-08-18  James Pallister  <james.pallister@embecosm.com>
+
+	* goal.def: Changed p24 to work with smaller bit widths.
+
+2014-08-18  James Pallister  <james.pallister@embecosm.com>
 	
 	* superopt.c (output_assembly: Added adc instruction for AVR.
 	* synth.def (synth): Added adc instruction for AVR.

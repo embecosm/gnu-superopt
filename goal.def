@@ -55,7 +55,7 @@ DEF_GOAL (P20,            3, "p20",         { unsigned_word r__o2 = v0 & -v0; \
 DEF_GOAL (P21,            4, "p21",         { r = (v0 == v1)? v2 : ((v0 == v2)?v3:v1); })
 DEF_GOAL (P22,            1, "p22",         { r =  __builtin_popcountl(v0)&1 ; })
 DEF_GOAL (P23,            1, "p23",         { r =  __builtin_popcountl(v0) ; })
-DEF_GOAL (P24,            1, "p24",         { r =  (v0 <= 2)? v0 : ((1ULL << 32) >> __builtin_clz(v0 - 1)) ; })
+DEF_GOAL (P24,            1, "p24",         { r =  (v0 <= 2)? v0 : (1 << (sizeof(v0)*8 - __builtin_clz(v0 - 1))) ; })
 DEF_GOAL (P25,            2, "p25",         ({ word t1; word t2; umul_ppmm (t1, t2, v0, v1); r = t2; }))
 
 DEF_GOAL (EQ,             2, "eq",          { r = v0 == v1; })
