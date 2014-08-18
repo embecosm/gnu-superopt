@@ -1,5 +1,11 @@
 2014-08-17  James Pallister  <james.pallister@embecosm.com>
 
+	* goal.def: Some of the goals use the 0x80000000 constant. These are
+		changed to be 0x80 when the bit width of the target is 8-bits,
+		for example.
+
+2014-08-17  James Pallister  <james.pallister@embecosm.com>
+
 	* All files: Add AVR support. Support for the add, sub, inc, cmp, xor,
 		or, and, mov instruction.
 
