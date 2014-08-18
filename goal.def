@@ -98,10 +98,12 @@ DEF_GOAL (NGES0,          1, "nges0",       { r = -((signed_word) v0 >= 0); })
 DEF_GOAL (NLTS0,          1, "nlts0",       { r = -((signed_word) v0 < 0); })
 DEF_GOAL (NGTS0,          1, "ngts0",       { r = -((signed_word) v0 > 0); })
 
+/* Maximum of 32 for compatability */
+#define N_BITS             ((sizeof(unsigned_word)*8) > 32 ? 32 : (sizeof(unsigned_word)*8))
 /* Negative high one */
-#define HIGHONE_N         ((unsigned_word)1<<(BITS_PER_WORD-1))
+#define HIGHONE_N         ((unsigned_word)1<<(N_BITS-1))
 /* Positive high one */
-#define HIGHONE_P         ((signed_word)1<<(BITS_PER_WORD-2))
+#define HIGHONE_P         ((signed_word)1<<(N_BITS-2))
 DEF_GOAL (EQ80000000,            2, "eq80000000",         { r = HIGHONE_N & -(v0 == v1); })
 DEF_GOAL (NE80000000,            2, "ne80000000",         { r = HIGHONE_N & -(v0 != v1); })
 DEF_GOAL (LES80000000,           2, "les80000000",        { r = HIGHONE_N & -((signed_word) v0 <= (signed_word) v1); })
@@ -129,8 +131,8 @@ DEF_GOAL (CMPU,           2, "cmpu",        { r = (unsigned_word) v0 > (unsigned
 DEF_GOAL (SGN,            1, "sgn",         { r = (signed_word) v0 > 0 ? 1 : ((signed_word) v0 < 0 ? -1 : 0); })
 DEF_GOAL (ABS,            1, "abs",         { r = (signed_word) v0 < 0 ? -v0 : v0; })
 DEF_GOAL (NABS,           1, "nabs",        { r = (signed_word) v0 > 0 ? -v0 : v0; })
-DEF_GOAL (GRAY,           1, "gray",        { r = ((~(v0 ^ (v0 << 1)) & (-1 << (BITS_PER_WORD-1))) | ((v0 << 1) & ~(-1 << (BITS_PER_WORD-1))) | (v0 >> (BITS_PER_WORD-1))); })
-DEF_GOAL (GRAY2,          1, "gray2",       { v0 = ((~(v0 ^ (v0 << 1)) & (-1 << (BITS_PER_WORD-1))) | ((v0 << 1) & ~(-1 << (BITS_PER_WORD-1))) | (v0 >> (BITS_PER_WORD-1))); r = ((~(v0 ^ (v0 << 1)) & (-1 << (BITS_PER_WORD-1))) | ((v0 << 1) & ~(-1 << (BITS_PER_WORD-1))) | (v0 >> 31)); })
+DEF_GOAL (GRAY,           1, "gray",        { r = ((~(v0 ^ (v0 << 1)) & (-1 << (N_BITS-1))) | ((v0 << 1) & ~(-1 << (N_BITS-1))) | (v0 >> (N_BITS-1))); })
+DEF_GOAL (GRAY2,          1, "gray2",       { v0 = ((~(v0 ^ (v0 << 1)) & (-1 << (N_BITS-1))) | ((v0 << 1) & ~(-1 << (N_BITS-1))) | (v0 >> (N_BITS-1))); r = ((~(v0 ^ (v0 << 1)) & (-1 << (N_BITS-1))) | ((v0 << 1) & ~(-1 << (N_BITS-1))) | (v0 >> 31)); })
 DEF_GOAL (DIVIDE_BY_2,    1, "divide_by_2", { r = (signed_word) v0 / 2; })
 DEF_GOAL (DIVIDE_BY_4,    1, "divide_by_4", { r = (signed_word) v0 / 4; })
 DEF_GOAL (DIVIDE_BY_2e30,    1, "divide_by_2e30", { r = (signed_word) v0 / HIGHONE_P; })
