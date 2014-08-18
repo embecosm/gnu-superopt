@@ -1,5 +1,10 @@
 2014-08-18  James Pallister  <james.pallister@embecosm.com>
 	
+	* superopt.c (output_assembly: Added adc instruction for AVR.
+	* synth.def (synth): Added adc instruction for AVR.
+
+2014-08-18  James Pallister  <james.pallister@embecosm.com>
+	
 	* superopt.c: Added a test count, for the number of full sequences
 		that have been evaluated.
 

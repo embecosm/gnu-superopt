@@ -2699,7 +2699,7 @@ MAKENAME (synth) (insn_t *sequence,
                     continue;
                 }
 
-#if M68000 || I386 || PYR || SH
+#if M68000 || I386 || PYR || SH || AVR
               /* m68000:        addx
                  i80386:        adc
                  pyramid:       addwc
@@ -4175,7 +4175,7 @@ concmpo         1       c--     ccc
          i960:          move    0,d */
       PERFORM_COPY(v, co, VALUE(0), ci);
       RECURSE(COPY, CNST(0), 0, prune_hint & ~CY_JUST_SET);
-                 
+
       /* cy = 100b */
       PERFORM_CMPO_960(v, co, VALUE(0), VALUE(1), ci);
       CRECURSE_2OP(CMPO_960, n_values, CNST(0), CNST(1), 1, CY_JUST_SET | CY_0);

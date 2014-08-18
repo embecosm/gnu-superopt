@@ -2490,6 +2490,8 @@ output_assembly(insn_t insn)
       break;
     case ADD_CO:
       printf("add       %s,%s",NAME(s1),NAME(s2)); break;
+    case ADD_CIO:
+      printf("adc       %s,%s",NAME(s1),NAME(s2)); break;
     case SUB_CO:
       printf("sub       %s,%s",NAME(s1),NAME(s2));break;
     case AND:
