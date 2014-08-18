@@ -41,6 +41,7 @@ int flag_extracts = 0;
 int flag_nl = 0;
 
 unsigned long test_count = 0;
+unsigned long test_limit = -1;
 
 /* Counts the number of solutions found.  Flags to top loop that it should
    not go deeper.  */
@@ -294,6 +295,9 @@ recurse(opcode_t opcode,
      instruction.  */
   allowed_cost -= cost;
 
+  if(test_limit > 0 && test_count >= test_limit)
+    return;
+
   if (allowed_cost > 0)
     {
       /* ALLOWED_COST is still positive, meaning we can generate more
@@ -356,17 +360,16 @@ recurse(opcode_t opcode,
 
 #ifdef STATISTICS
       heuristic_accept_count++;
-    test_count++;
 #endif
-
-    }
-#ifdef STATISTICS
-  else
-    {
-      heuristic_reject_count++;
       test_count++;
     }
+  else
+    {
+#ifdef STATISTICS
+      heuristic_reject_count++;
 #endif
+      test_count++;
+    }
 }
 
 static inline void
@@ -380,6 +383,9 @@ recurse_last(opcode_t opcode,
              const word goal_value)
 {
   insn_t insn;
+
+  if(test_limit > 0 && test_count >= test_limit)
+    return;
 
   if (goal_value == v)
     {
@@ -400,16 +406,16 @@ recurse_last(opcode_t opcode,
 
 #ifdef STATISTICS
       heuristic_accept_count++;
-      test_count++;
 #endif
+      test_count++;
     }
-#ifdef STATISTICS
   else
     {
+#ifdef STATISTICS
       heuristic_reject_count++;
+#endif
       test_count++;
     }
-#endif
 }
 
 #define NAME(op) operand_names[op]
@@ -2889,6 +2895,12 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
               return;
             }
         }
+
+      if (test_limit > 0 && test_count >= test_limit)
+      {
+        printf("Test limit reached\n");
+        break;
+      }
     }
   printf(" failure.\n");
 }
@@ -3048,6 +3060,17 @@ main(int argc, char **argv)
               fprintf(stderr, "superoptimizer: unknown goal function\n");
               exit(-1);
             }
+        }
+      else if (!strncmp(arg, "-test-limit", arglen))
+        {
+          argv++;
+          argc--;
+          if (argc == 0)
+            {
+              fprintf(stderr, "superoptimizer: argument to `-test-limit' expected\n");
+              exit(-1);
+            }
+          test_limit = atoi(argv[0]);
         }
       else
         {

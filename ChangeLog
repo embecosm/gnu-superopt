@@ -1,4 +1,9 @@
 2014-08-18  James Pallister  <james.pallister@embecosm.com>
+	
+	* superopt.c: Add a -test-limit option to specify the maximum
+		number of tests to evaluate.
+
+2014-08-18  James Pallister  <james.pallister@embecosm.com>
 
 	* goal.def: Changed p24 to work with smaller bit widths.
 
