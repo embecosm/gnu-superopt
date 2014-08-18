@@ -40,6 +40,8 @@ int flag_shifts = 0;
 int flag_extracts = 0;
 int flag_nl = 0;
 
+unsigned long test_count = 0;
+
 /* Counts the number of solutions found.  Flags to top loop that it should
    not go deeper.  */
 int success;
@@ -354,12 +356,16 @@ recurse(opcode_t opcode,
 
 #ifdef STATISTICS
       heuristic_accept_count++;
+    test_count++;
 #endif
 
     }
 #ifdef STATISTICS
   else
-    heuristic_reject_count++;
+    {
+      heuristic_reject_count++;
+      test_count++;
+    }
 #endif
 }
 
@@ -394,11 +400,15 @@ recurse_last(opcode_t opcode,
 
 #ifdef STATISTICS
       heuristic_accept_count++;
+      test_count++;
 #endif
     }
 #ifdef STATISTICS
   else
-    heuristic_reject_count++;
+    {
+      heuristic_reject_count++;
+      test_count++;
+    }
 #endif
 }
 
@@ -2791,6 +2801,7 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
   init_immediates(values);
   init_random_word();
   init_test_sets();
+  test_count = 0;
 
   /* Speed hack: Try to find random values that makes the goal function
      take a value != 0.  Many false sequences give 0 for all input,
@@ -2858,6 +2869,7 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
       printf("\n");
       printf("heuristic accept count:%u\n", heuristic_accept_count);
       printf("heuristic reject count:%u\n", heuristic_reject_count);
+      printf("test count: %lu\n", test_count);
 #endif
 #if TIMING
       for (i = 1; i <= max_cost; i++)

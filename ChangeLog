@@ -1,4 +1,9 @@
 2014-08-18  James Pallister  <james.pallister@embecosm.com>
+	
+	* superopt.c: Added a test count, for the number of full sequences
+		that have been evaluated.
+
+2014-08-18  James Pallister  <james.pallister@embecosm.com>
 
 	* goal.def: To keep compatability don't generate any constants 
 		larger than 32-bits.
