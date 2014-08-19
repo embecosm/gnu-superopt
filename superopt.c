@@ -40,8 +40,8 @@ int flag_shifts = 0;
 int flag_extracts = 0;
 int flag_nl = 0;
 
-unsigned long test_count = 0;
-unsigned long test_limit = -1;
+unsigned long long test_count = 0;
+unsigned long long test_limit = -1;
 
 /* Counts the number of solutions found.  Flags to top loop that it should
    not go deeper.  */
@@ -2877,7 +2877,7 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
       printf("\n");
       printf("heuristic accept count:%u\n", heuristic_accept_count);
       printf("heuristic reject count:%u\n", heuristic_reject_count);
-      printf("test count: %lu\n", test_count);
+      printf("test count: %llu\n", test_count);
 #endif
 #if TIMING
       for (i = 1; i <= max_cost; i++)
@@ -3070,7 +3070,7 @@ main(int argc, char **argv)
               fprintf(stderr, "superoptimizer: argument to `-test-limit' expected\n");
               exit(-1);
             }
-          test_limit = atoi(argv[0]);
+          test_limit = atoll(argv[0]);
         }
       else
         {
