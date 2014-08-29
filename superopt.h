@@ -152,7 +152,7 @@ typedef unsigned_word word;
 #else /* Not on alpha, not GCC.  Don't have 64 bit type.  */
 #error Do not know how to perform 64 bit arithmetic with this compiler.
 #endif
-#elif AVR
+#elif BITS_PER_WORD == 8
 typedef unsigned char unsigned_word;
 typedef signed char signed_word;
 typedef unsigned_word word;

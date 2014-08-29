@@ -1,3 +1,8 @@
+2014-08-29  James Pallister  <james.pallister@embecosm.com>
+
+	* superopt.h: 8 bit word should be selected if the bits per word is 8,
+		not just if AVR is selected.
+
 2014-08-19  James Pallister  <james.pallister@embecosm.com>
 
 	* superopt.c: Changed the test counters and limits to 64 bit to
