@@ -1,4 +1,21 @@
 2014-08-29  James Pallister  <james.pallister@embecosm.com>
+	
+	Added a new pruning method. This method records the state of the registers
+	and carry if no solutions are found after recursing. Before subsequent
+	calls to synth this hash table is checked. If the current registers and
+	carry are in the table, and the allowed cost is lower or equal to the
+	stored value then the current sequence cannot be optimal, so skip it.
+
+	* superopt.c: Include hashtable.c and add a hash_skipped global to count
+		the amount of pruning.
+	(recurse): Before calling synth look up the registers and carry in the
+		table. Don't do this if allowed_cost is small, since it is quicker
+		just to test in this case. If no more results are found, add registers
+		and carry to the hashtable
+	* hashtable.c: New file. Implementation of a hashtable.
+
+
+2014-08-29  James Pallister  <james.pallister@embecosm.com>
 
 	* superopt.h: 8 bit word should be selected if the bits per word is 8,
 		not just if AVR is selected.

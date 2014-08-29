@@ -30,6 +30,8 @@ word random_word(void);
 #include "run_program.def"
 #include "version.h"
 
+#include "hashtable.c"
+
 int goal_function_arity;
 enum goal_func goal_function;
 word (*eval_goal_function) (const word *);
@@ -40,6 +42,7 @@ int flag_shifts = 0;
 int flag_extracts = 0;
 int flag_nl = 0;
 
+unsigned long long hash_skipped = 0;
 unsigned long long test_count = 0;
 unsigned long long test_limit = -1;
 
@@ -290,6 +293,7 @@ recurse(opcode_t opcode,
         )
 {
   insn_t insn;
+  int old_success = success;
 
   /* Update the remaining allowed cost with the cost of the last
      instruction.  */
@@ -335,8 +339,23 @@ recurse(opcode_t opcode,
       sequence[n_insns] = insn;
 #endif
 
-      SYNTH(sequence, n_insns + 1, values, n_values, goal_value,
-             allowed_cost, cy, prune_flags, nullify_flag);
+      /* If we have seen the same state at a lower or equal cost and rejected it
+         then the sequence cannot be optimal.
+         TODO check whether the has table needs to include prune_flags */
+      if (allowed_cost > 1 && allowed_cost <= hashtable_find(values, n_values, cy))
+      {
+        hash_skipped ++;
+      }
+      else
+      {
+        SYNTH(sequence, n_insns + 1, values, n_values, goal_value,
+               allowed_cost, cy, prune_flags, nullify_flag);
+
+        if (success == old_success && allowed_cost > 1)
+          {
+            hashtable_insert(values, n_values, cy, allowed_cost);
+          }
+      }
 
       /* Restore value of dest. reg.  Move to CRECURSE_2OP???  */
       values[d] = old_d;
@@ -2809,6 +2828,7 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
   init_immediates(values);
   init_random_word();
   init_test_sets();
+  hashtable_init();
   test_count = 0;
 
   /* Speed hack: Try to find random values that makes the goal function
@@ -2878,6 +2898,7 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
       printf("heuristic accept count:%u\n", heuristic_accept_count);
       printf("heuristic reject count:%u\n", heuristic_reject_count);
       printf("test count: %llu\n", test_count);
+      printf("hash skipped: %llu\n", hash_skipped);
 #endif
 #if TIMING
       for (i = 1; i <= max_cost; i++)
