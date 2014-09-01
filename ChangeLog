@@ -1,4 +1,11 @@
 2014-08-29  James Pallister  <james.pallister@embecosm.com>
+	Small bug fix in the pruning method.
+
+	* superopt.c (recurse): Use the accepted heuristic counter instead of
+	total success count, since we are only considering the possible
+	correctness of the one set of input values, not all.
+
+2014-08-29  James Pallister  <james.pallister@embecosm.com>
 	
 	Added a new pruning method. This method records the state of the registers
 	and carry if no solutions are found after recursing. Before subsequent

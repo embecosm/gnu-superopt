@@ -77,8 +77,8 @@ int timings[100];
 
 #ifdef STATISTICS
 unsigned int heuristic_reject_count = 0;
-unsigned int heuristic_accept_count = 0;
 #endif
+unsigned int heuristic_accept_count = 0;
 
 char *insn_name[] =
 {
@@ -293,7 +293,7 @@ recurse(opcode_t opcode,
         )
 {
   insn_t insn;
-  int old_success = success;
+  int old_success = heuristic_accept_count;
 
   /* Update the remaining allowed cost with the cost of the last
      instruction.  */
@@ -351,7 +351,7 @@ recurse(opcode_t opcode,
         SYNTH(sequence, n_insns + 1, values, n_values, goal_value,
                allowed_cost, cy, prune_flags, nullify_flag);
 
-        if (success == old_success && allowed_cost > 1)
+        if (heuristic_accept_count == old_success && allowed_cost > 1)
           {
             hashtable_insert(values, n_values, cy, allowed_cost);
           }
@@ -377,9 +377,7 @@ recurse(opcode_t opcode,
 #endif
       test_sequence(sequence, n_insns + 1);
 
-#ifdef STATISTICS
       heuristic_accept_count++;
-#endif
       test_count++;
     }
   else
@@ -423,9 +421,7 @@ recurse_last(opcode_t opcode,
 #endif
       test_sequence(sequence, n_insns + 1);
 
-#ifdef STATISTICS
       heuristic_accept_count++;
-#endif
       test_count++;
     }
   else
