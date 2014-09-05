@@ -2707,7 +2707,7 @@ MAKENAME (synth) (insn_t *sequence,
               PERFORM_ADD_CIO(v, co, r1, r2, ci);
               CRECURSE_2OP(ADD_CIO, s1, s1, s2, 1, CY_JUST_SET);
 #endif
-#if M68000 || I386 || SH
+#if M68000 || I386 || SH || AVR
               if (s1 != s2)
                 {
                   /* m68000:    subx
@@ -2724,6 +2724,12 @@ MAKENAME (synth) (insn_t *sequence,
                   PERFORM_ADC_CIO(v, co, r1, r2, ci);
                   CRECURSE_2OP(ADC_CIO, s1, s1, s2, 1, CY_JUST_SET);
                 }
+#endif
+#if AVR
+              PERFORM_CMPC(v, co, r1, r2, ci);
+              /* kludge: lie that the result is written to
+                 register <n_values>. */
+              CRECURSE_2OP(CMPC, n_values, s1, s2, 1, CY_JUST_SET);
 #endif
             }
         }
@@ -3174,7 +3180,7 @@ MAKENAME (synth) (insn_t *sequence,
       PERFORM_XOR_CC(v, co, r1, VALUE_MIN_SIGNED, ci);
       CRECURSE_2OP(XOR_CC, s1, s1, CNST_0x80000000, 2, 0);
 #endif
-#if M68000 || I386
+#if M68000 || I386 || AVR
       /* d = ~r1
          m68000:        not     d
          i80386:        not     d */
@@ -3205,7 +3211,7 @@ MAKENAME (synth) (insn_t *sequence,
       PERFORM_ADD(v, co, r1, VALUE(1), ci);
       RECURSE(ADD, s1, CNST(1), prune_hint & ~CY_JUST_SET);
 #endif
-#if I386 || SH
+#if I386 || SH || AVR
       /* d = r1 - 1
          i80386:        dec     d
          sh:            add     #-1,d */
@@ -3366,7 +3372,7 @@ MAKENAME (synth) (insn_t *sequence,
      Don't do this if we are just permitted to do one more instruction.  */
   if (allowed_cost > 1)
     {
-#if M68000 || I386 || PYR || SH
+#if M68000 || I386 || PYR || SH || AVR
       /* d = 0
          m68000:        moveq   0,d
          i80386:        movl    $0,d
@@ -3414,6 +3420,8 @@ MAKENAME (synth) (insn_t *sequence,
          sh:            mov     #1,d */
       PERFORM_COPY(v, co, VALUE(1), ci);
       CRECURSE_NEW(COPY, n_values, CNST(1), CNST(0), 1,  prune_hint & ~CY_JUST_SET);
+#endif
+#if M68000 || PYR || SH || AVR
       /* d = -1
          m68000:        moveq   -1,d
          pyramid:       movw    $-1,d

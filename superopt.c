@@ -2507,6 +2507,13 @@ output_assembly(insn_t insn)
     case ADD:
       if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 1)
         printf("inc       %s",NAME(s1));
+      else if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == -1)
+        printf("dec       %s",NAME(s1));
+      else abort();
+      break;
+    case SUB:
+      if (IMMEDIATE_P(s1) && IMMEDIATE_VAL(s1) == -1)
+        printf("com       %s",NAME(s2));
       else abort();
       break;
     case ADD_CO:
@@ -2514,17 +2521,32 @@ output_assembly(insn_t insn)
     case ADD_CIO:
       printf("adc       %s,%s",NAME(s1),NAME(s2)); break;
     case SUB_CO:
-      printf("sub       %s,%s",NAME(s1),NAME(s2));break;
+      printf("sub       %s,%s",NAME(s1),NAME(s2)); break;
+    case SUB_CIO:
+      printf("sbc       %s,%s",NAME(s1),NAME(s2));break;
     case AND:
       printf("and       %s,%s",NAME(s1),NAME(s2));break;
     case CMP:
       printf("cp        %s,%s",NAME(s1),NAME(s2));break;
+    case CMPC:
+      printf("cpc       %s,%s",NAME(s1),NAME(s2));break;
     case IOR:
       printf("or        %s,%s",NAME(s1),NAME(s2));break;
     case XOR:
-      printf("xor       %s,%s",NAME(s1),NAME(s2));break;
+      printf("eor       %s,%s",NAME(s1),NAME(s2));break;
     case COPY:
-      printf("mov       %s,%s",NAME(d),NAME(s1));break;
+      if (IMMEDIATE_P(s1))
+        {
+          if (IMMEDIATE_VAL(s1) == 0)
+            printf("clr       %s",NAME(d));
+          else if (IMMEDIATE_VAL(s1) == -1)
+            printf("ser       %s",NAME(d));
+          else
+            abort();
+        }
+      else
+        printf("mov       %s,%s",NAME(d),NAME(s1));
+      break;
 #else
 #error no assembly output code for this CPU
 #endif
