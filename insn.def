@@ -134,6 +134,7 @@ DEF_INSN (BSF86,        '1', "bsf86")
 DEF_INSN (ABSVAL,       '1', "abs")
 DEF_INSN (NABSVAL,      '1', "nabs")
 DEF_INSN (CMP,          '<', "cmp")
+DEF_INSN (CMPC,         '<', "cmpc")
 
 /* XCore bit/byte reverse instructions. */
 DEF_INSN (BITREV,       '1', "bitrev")

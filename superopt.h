@@ -401,8 +401,26 @@ typedef struct
 
 #ifndef PERFORM_CMP
 #define PERFORM_CMP(d, co, r1, r2, ci) \
-  ((co) = (r1) < (r2))
+  do { \
+    unsigned_word __x = (r1) - (r2); \
+    unsigned_word __result_b = __x >> (BITS_PER_WORD - 1) ; \
+    unsigned_word __r1_b = (unsigned_word)(r1) >> (BITS_PER_WORD - 1) ; \
+    unsigned_word __r2_b = (unsigned_word)(r2) >> (BITS_PER_WORD - 1) ; \
+    ((co) = ((~__r1_b & __r2_b) | (__r2_b & __result_b) | (__result_b & ~__r1_b))&1); \
+  } while (0)
 #endif
+
+#ifndef PERFORM_CMPC
+#define PERFORM_CMPC(d, co, r1, r2, ci) \
+  do { \
+    unsigned_word __x = (r1) - (r2) - (ci); \
+    unsigned_word __result_b = __x >> (BITS_PER_WORD - 1) ; \
+    unsigned_word __r1_b = (unsigned_word)(r1) >> (BITS_PER_WORD - 1) ; \
+    unsigned_word __r2_b = (unsigned_word)(r2) >> (BITS_PER_WORD - 1) ; \
+    ((co) = ((~__r1_b & __r2_b) | (__r2_b & __result_b) | (__result_b & ~__r1_b))&1); \
+  } while (0)
+#endif
+
 #ifndef PERFORM_CMPPAR
 #define PERFORM_CMPPAR(d, co, r1, r2, ci) \
   do {                                                                  \

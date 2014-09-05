@@ -1,3 +1,12 @@
+2014-09-05  James Pallister  <james.pallister@embecosm.com>
+	Added the compare with carry instruction definition (cmpc), and updated
+	cmp to work with other bit widths.
+
+	* insn.def: Added CMPC instruction.
+	* run_program.def: Added a case to execute the CMPC instruction.
+	* superopt.h: Added CMPC and modified CMP to compute the carry for all bit
+	widths.
+
 2014-08-29  James Pallister  <james.pallister@embecosm.com>
 	Small bug fix in the pruning method.
 

@@ -105,6 +105,7 @@ run_program(insn_t *sequence, int n_insns, word *regs)
         case LDAWB:     PERFORM_LDAWB(v, co, r1, r2, ci); break;
 
         case CMP:       PERFORM_CMP(v, co, r1, r2, ci); break;
+        case CMPC:      PERFORM_CMPC(v, co, r1, r2, ci); break;
         case CMPPAR:    PERFORM_CMPPAR(v, co, r1, r2, ci); break;
 
         case AND:       PERFORM_AND(v, co, r1, r2, ci); break;
