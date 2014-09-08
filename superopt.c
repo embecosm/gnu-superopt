@@ -2541,6 +2541,14 @@ output_assembly(insn_t insn)
       printf("or        %s,%s",NAME(s1),NAME(s2));break;
     case XOR:
       printf("eor       %s,%s",NAME(s1),NAME(s2));break;
+    case LSHIFTR_CO:
+      printf("lsr       %s",NAME(s1));break;
+    case ASHIFTR_CO:
+      printf("asr       %s",NAME(s1));break;
+    case ROTATEXL_CIO:
+      printf("rol       %s",NAME(s1));break;
+    case ROTATEXR_CIO:
+      printf("ror       %s",NAME(s1));break;
     case COPY:
       if (IMMEDIATE_P(s1))
         {

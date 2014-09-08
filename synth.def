@@ -2962,6 +2962,13 @@ MAKENAME (synth) (insn_t *sequence,
           PERFORM_ROTATEXR_CIO(v, co, r1, VALUE(1), ci);
           CRECURSE_2OP(ROTATEXR_CIO, s1, s1, CNST(1), SHIFT_COST(1), CY_JUST_SET);
 #endif
+#if AVR
+          PERFORM_ROTATEXL_CIO(v, co, r1, VALUE(1), ci);
+          CRECURSE_2OP(ROTATEXL_CIO, s1, s1, CNST(1), 1, CY_JUST_SET);
+
+          PERFORM_ROTATEXR_CIO(v, co, r1, VALUE(1), ci);
+          CRECURSE_2OP(ROTATEXR_CIO, s1, s1, CNST(1), 1, CY_JUST_SET);
+#endif
         }
     }
 
@@ -3084,6 +3091,13 @@ MAKENAME (synth) (insn_t *sequence,
 
       PERFORM_ROTATER_CO(v, co, r1, VALUE(1), ci);
       CRECURSE_2OP(ROTATER_CO, s1, s1, CNST(1), SHIFT_COST(1), CY_JUST_SET);
+#endif
+#if AVR
+      PERFORM_ASHIFTR_CO(v, co, r1, VALUE(1), ci);
+      CRECURSE_2OP(ASHIFTR_CO, s1, s1, CNST(1), 1, CY_JUST_SET);
+
+      PERFORM_LSHIFTR_CO(v, co, r1, VALUE(1), ci);
+      CRECURSE_2OP(LSHIFTR_CO, s1, s1, CNST(1), 1, CY_JUST_SET);
 #endif
 #if SH
       PERFORM_LSHIFTR(v, co, r1, VALUE(2), ci);
