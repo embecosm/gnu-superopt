@@ -32,6 +32,8 @@ word random_word(void);
 
 #include "hashtable.c"
 
+// #define DO_HASHTABLE
+
 int goal_function_arity;
 enum goal_func goal_function;
 word (*eval_goal_function) (const word *);
@@ -339,6 +341,7 @@ recurse(opcode_t opcode,
       sequence[n_insns] = insn;
 #endif
 
+#ifdef DO_HASHTABLE
       /* If we have seen the same state at a lower or equal cost and rejected it
          then the sequence cannot be optimal.
          TODO check whether the has table needs to include prune_flags */
@@ -356,6 +359,10 @@ recurse(opcode_t opcode,
             hashtable_insert(values, n_values, cy, allowed_cost);
           }
       }
+#else
+      SYNTH(sequence, n_insns + 1, values, n_values, goal_value,
+              allowed_cost, cy, prune_flags, nullify_flag);
+#endif
 
       /* Restore value of dest. reg.  Move to CRECURSE_2OP???  */
       values[d] = old_d;
@@ -2846,7 +2853,9 @@ main_synth(int maxmax_cost, int allowed_extra_cost)
   init_immediates(values);
   init_random_word();
   init_test_sets();
+#ifdef DO_HASHTABLE
   hashtable_init();
+#endif
   test_count = 0;
 
   /* Speed hack: Try to find random values that makes the goal function

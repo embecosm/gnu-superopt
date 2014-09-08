@@ -1,3 +1,9 @@
+2014-09-08  James Pallister  <james.pallister@embecosm.com>
+	Made the hashtable usage conditional on DO_HASHTABLE
+
+	* superopt.c: Added the DO_HASHTABLE preprocessor defined, to decide
+	whether to use the hashtable speed up or not
+
 2014-09-05  James Pallister  <james.pallister@embecosm.com>
 	Added more instructions to the AVR port: dec, sbc, clr, ser, cpc
 
