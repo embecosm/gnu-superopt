@@ -1,3 +1,9 @@
+2014-09-10  James Pallister  <james.pallister@embecosm.com>
+	Added the clc and sec AVR instructions.
+
+	* superopt.c (output_assembly): Added assembly output for the above
+	* synth.def: Added calls to the above instructions.
+
 2014-09-08  James Pallister  <james.pallister@embecosm.com>
 	Added the ror, rol, asr and lsr AVR instructions
 
@@ -34,7 +40,7 @@
 	correctness of the one set of input values, not all.
 
 2014-08-29  James Pallister  <james.pallister@embecosm.com>
-	
+
 	Added a new pruning method. This method records the state of the registers
 	and carry if no solutions are found after recursing. Before subsequent
 	calls to synth this hash table is checked. If the current registers and
@@ -61,7 +67,7 @@
 		avoid overflow.
 
 2014-08-18  James Pallister  <james.pallister@embecosm.com>
-	
+
 	* superopt.c: Add a -test-limit option to specify the maximum
 		number of tests to evaluate.
 
@@ -70,18 +76,18 @@
 	* goal.def: Changed p24 to work with smaller bit widths.
 
 2014-08-18  James Pallister  <james.pallister@embecosm.com>
-	
+
 	* superopt.c (output_assembly: Added adc instruction for AVR.
 	* synth.def (synth): Added adc instruction for AVR.
 
 2014-08-18  James Pallister  <james.pallister@embecosm.com>
-	
+
 	* superopt.c: Added a test count, for the number of full sequences
 		that have been evaluated.
 
 2014-08-18  James Pallister  <james.pallister@embecosm.com>
 
-	* goal.def: To keep compatability don't generate any constants 
+	* goal.def: To keep compatability don't generate any constants
 		larger than 32-bits.
 
 2014-08-17  James Pallister  <james.pallister@embecosm.com>

@@ -2549,6 +2549,10 @@ output_assembly(insn_t insn)
       printf("rol       %s",NAME(s1));break;
     case ROTATEXR_CIO:
       printf("ror       %s",NAME(s1));break;
+    case SETCY:
+      printf("sec");break;
+    case CLRCY:
+      printf("clc");break;
     case COPY:
       if (IMMEDIATE_P(s1))
         {

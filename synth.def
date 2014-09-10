@@ -3452,7 +3452,7 @@ MAKENAME (synth) (insn_t *sequence,
       PERFORM_COPY(v, co, VALUE_MAX_SIGNED, ci);
       CRECURSE_NEW(COPY, n_values, CNST_0x7FFFFFFF, CNST(0), 2, prune_hint & ~CY_JUST_SET);
 #endif
-#if SH
+#if SH || AVR
       /* sh:    sett */
       co = 1;
       CRECURSE_2OP(SETCY, n_values, n_values, n_values, 1, CY_JUST_SET | CY_1);
