@@ -3030,6 +3030,11 @@ MAKENAME (synth) (insn_t *sequence,
 #endif
         }
 
+#if AVR
+        PERFORM_ROTATEL(v, co, r1, VALUE(4), ci);
+        CRECURSE_2OP(ROTATEL, s1, s1, CNST(4), 1, prune_hint & ~CY_JUST_SET);
+#endif
+
 #if I386 || PYR
       {
         int cnt;

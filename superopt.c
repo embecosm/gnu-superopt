@@ -2549,6 +2549,11 @@ output_assembly(insn_t insn)
       printf("rol       %s",NAME(s1));break;
     case ROTATEXR_CIO:
       printf("ror       %s",NAME(s1));break;
+    case ROTATEL:
+      if (IMMEDIATE_P(s2) && IMMEDIATE_VAL(s2) == 4)
+        printf("swap      %s",NAME(s1));
+      else abort();
+      break;
     case SETCY:
       printf("sec");break;
     case CLRCY:

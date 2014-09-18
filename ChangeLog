@@ -1,3 +1,9 @@
+2014-09-18  James Pallister  <james.pallister@embecosm.com>
+	Added the swap AVR instruction.
+
+	* superopt.c (output_assembly): Added assembly output for the above
+	* synth.def: Added calls to the above instructions.
+
 2014-09-10  James Pallister  <james.pallister@embecosm.com>
 	Added the clc and sec AVR instructions.
 
